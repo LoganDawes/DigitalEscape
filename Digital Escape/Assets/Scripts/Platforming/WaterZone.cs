@@ -1,16 +1,27 @@
 using UnityEngine;
 
+/*
+ 
+    WaterZone : Platforming
+    Zone that puts the player in a swimming state when they enter it.
+ 
+ */
+
 public class WaterZone : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

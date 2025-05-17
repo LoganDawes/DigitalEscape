@@ -1,16 +1,27 @@
 using UnityEngine;
 
-public class Spikes : MonoBehaviour
+/*
+
+    Spikes.cs : Hazards
+    Basic hazard that deals damage to the player on contact.
+
+*/
+
+public class Spikes : HazardBase
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

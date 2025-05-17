@@ -1,16 +1,27 @@
 using UnityEngine;
 
-public class Torpedo : MonoBehaviour
+/*
+
+    Torpedo : Projectiles
+    Torpedo that only operates in water and slightly homes in on the player.
+
+ */
+
+public class Torpedo : ProjectileBase
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

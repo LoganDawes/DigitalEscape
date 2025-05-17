@@ -1,16 +1,27 @@
 using UnityEngine;
 
-public class SwimPowerup : MonoBehaviour
+/*
+ 
+    SwimPowerup : Powerups
+    Grants the player the ability to swim more efficiently.
+ 
+ */
+
+public class SwimPowerup : PowerupBase
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

@@ -1,16 +1,27 @@
 using UnityEngine;
 
-public class LaserBeam : MonoBehaviour
+/*
+
+    LaserBeam.cs : Hazards
+    Laser beam hazard that deals damage to the player on contact.
+
+*/
+
+public class LaserBeam : HazardBase
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

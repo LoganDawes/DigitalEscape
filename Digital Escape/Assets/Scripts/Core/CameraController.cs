@@ -1,5 +1,13 @@
 using UnityEngine;
 
+/*
+
+    CameraController : Core
+    Controls the camera position, smoothing, and zoom level.
+    Can change the target to follow a different object.
+
+ */
+
 public class CameraController : MonoBehaviour
 {
     // Variables

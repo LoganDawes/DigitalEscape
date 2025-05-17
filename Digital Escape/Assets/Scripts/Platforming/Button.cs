@@ -1,16 +1,27 @@
 using UnityEngine;
 
-public class Button : MonoBehaviour
+/*
+ 
+    Button : Platforming
+    When interacted with, activates attached components.
+ 
+ */
+
+public class Button : ButtonBase
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

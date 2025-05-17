@@ -1,16 +1,27 @@
 using UnityEngine;
 
+/*
+ 
+    CheckpointGet : UI
+    UI for displaying the checkpoint get overlay.
+ 
+ */
+
 public class CheckpointGet : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

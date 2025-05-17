@@ -1,16 +1,27 @@
 using UnityEngine;
 
-public class BouncyFireball : MonoBehaviour
+/*
+
+    BouncyFireball : Projectiles
+    Fireball projectile that bounces off walls and the ground.
+
+ */
+
+public class BouncyFireball : ProjectileBase
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

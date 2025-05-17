@@ -1,16 +1,27 @@
 using UnityEngine;
 
+/*
+ 
+    UIButton : UI
+    Basic button functionality for UI.
+ 
+ */
+
 public class UIButton : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

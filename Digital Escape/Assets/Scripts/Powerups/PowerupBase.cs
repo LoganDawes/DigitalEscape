@@ -1,16 +1,27 @@
 using UnityEngine;
 
+/*
+ 
+    PowerupBase : Powerups
+    Base class for all powerups.
+ 
+ */
+
 public class PowerupBase : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

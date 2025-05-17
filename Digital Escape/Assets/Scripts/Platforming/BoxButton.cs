@@ -1,16 +1,27 @@
 using UnityEngine;
 
-public class BoxButton : MonoBehaviour
+/*
+ 
+    BoxButton : Platforming
+    Button that can be pressed by a box to activate attached component.
+ 
+ */
+
+public class BoxButton : ButtonBase
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

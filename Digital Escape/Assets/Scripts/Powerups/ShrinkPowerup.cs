@@ -1,16 +1,27 @@
 using UnityEngine;
 
-public class ShrinkPowerup : MonoBehaviour
+/*
+ 
+    ShrinkPowerup : Powerups
+    Grants the player the ability to shrink.
+ 
+ */
+
+public class ShrinkPowerup : PowerupBase
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

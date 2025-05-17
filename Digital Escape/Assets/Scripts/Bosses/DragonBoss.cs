@@ -1,16 +1,27 @@
 using UnityEngine;
 
-public class DragonBoss : MonoBehaviour
+/*
+ 
+    DragonBoss.cs : Bosses
+    Code for the Dragon Boss behavior.
+ 
+ */
+
+public class DragonBoss : BossBase
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

@@ -1,16 +1,27 @@
 using UnityEngine;
 
-public class StaticPlatform : MonoBehaviour
+/*
+ 
+    StaticPlatform : Platforming
+    Completely static platform that does not move or rotate.
+ 
+ */
+
+public class StaticPlatform : PlatformBase
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

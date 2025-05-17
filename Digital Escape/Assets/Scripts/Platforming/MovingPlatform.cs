@@ -1,16 +1,27 @@
 using UnityEngine;
 
-public class MovingPlatform : MonoBehaviour
+/*
+ 
+    MovingPlatform : Platforming
+    Platform that either moves constantly in a set path or is moved by a button press.
+ 
+ */
+
+public class MovingPlatform : PlatformBase
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

@@ -1,16 +1,27 @@
 using UnityEngine;
 
+/*
+ 
+    LevelTitle : UI
+    UI overlay for displaying the level title.
+ 
+ */
+
 public class LevelTitle : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

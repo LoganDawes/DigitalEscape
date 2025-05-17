@@ -1,16 +1,27 @@
 using UnityEngine;
 
+/*
+ 
+    Fade : UI
+    UI overlay for fading in and out of the game.
+ 
+ */
+
 public class Fade : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

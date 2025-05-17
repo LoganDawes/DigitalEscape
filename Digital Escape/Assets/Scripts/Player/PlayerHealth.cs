@@ -1,16 +1,27 @@
 using UnityEngine;
 
+/*
+ 
+    PlayerHealth : Player
+    Manages the player's health, including taking damage and healing.
+ 
+ */
+
 public class PlayerHealth : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

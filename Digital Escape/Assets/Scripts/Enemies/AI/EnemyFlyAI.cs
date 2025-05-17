@@ -1,16 +1,27 @@
 using UnityEngine;
 
+/*
+
+    EnemyFlyAI : Enemies : AI
+    AI for the basic flying enemy.
+
+ */
+
 public class EnemyFlyAI : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

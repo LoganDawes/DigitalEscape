@@ -1,16 +1,27 @@
 using UnityEngine;
 
+/*
+ 
+    Elevator : Platforming
+    When interacted with locks the player in the box, moves up or down, then unlocks the player.
+ 
+ */
+
 public class Elevator : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

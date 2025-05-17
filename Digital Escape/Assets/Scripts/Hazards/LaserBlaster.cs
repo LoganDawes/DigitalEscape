@@ -1,16 +1,27 @@
 using UnityEngine;
 
-public class LaserBlaster : MonoBehaviour
+/*
+
+    LaserBlaster.cs : Hazards
+    Emits a laser beam that deals damage to the player on contact.
+
+*/
+
+public class LaserBlaster : HazardBase
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

@@ -1,16 +1,27 @@
 using UnityEngine;
 
+/*
+
+    EnemyShootAI : Enemies : AI
+    AI for the basic ranged shooting enemy.
+
+ */
+
 public class EnemyShootAI : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

@@ -1,16 +1,27 @@
 using UnityEngine;
 
+/*
+ 
+    Door : Platforming
+    Door that leads to the next level/scene when interacted with.
+ 
+ */
+
 public class Door : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

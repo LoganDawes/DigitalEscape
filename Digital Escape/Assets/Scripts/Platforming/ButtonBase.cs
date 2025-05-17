@@ -1,16 +1,27 @@
 using UnityEngine;
 
+/*
+ 
+    ButtonBase : Platforming
+    Base class for all button types.
+ 
+ */
+
 public class ButtonBase : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

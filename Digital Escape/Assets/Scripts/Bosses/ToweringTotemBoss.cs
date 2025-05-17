@@ -1,16 +1,27 @@
 using UnityEngine;
 
-public class ToweringTotemBoss : MonoBehaviour
+/*
+ 
+    ToweringTotemBoss.cs : Bosses
+    Code for the Towering Totem Boss behavior.
+ 
+ */
+
+public class ToweringTotemBoss : BossBase
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

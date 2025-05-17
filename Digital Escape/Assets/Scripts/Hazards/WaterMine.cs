@@ -1,16 +1,27 @@
 using UnityEngine;
 
-public class WaterMine : MonoBehaviour
+/*
+
+    WaterMine.cs : Hazards
+    Floating mine that explodes on contact with the player, dealing damage in a radius.
+
+*/
+
+public class WaterMine : HazardBase
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

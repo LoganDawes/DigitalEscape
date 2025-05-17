@@ -1,16 +1,27 @@
 using UnityEngine;
 
-public class Lava : MonoBehaviour
+/*
+
+    Lava.cs : Hazards
+    A hazard that kills the player on contact.
+
+*/
+
+public class Lava : HazardBase
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

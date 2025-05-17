@@ -1,16 +1,27 @@
 using UnityEngine;
 
-public class BigButton : MonoBehaviour
+/*
+ 
+    BigButton : Platforming
+    Button that activates attached components when stood on / box collided with.
+ 
+ */
+
+public class BigButton : ButtonBase
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

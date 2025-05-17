@@ -1,16 +1,27 @@
 using UnityEngine;
 
-public class HeavyBoxButton : MonoBehaviour
+/*
+ 
+    HeavyBoxButton : Platforming
+    Button that can only be pressed by a heavy box to activate attached component.
+ 
+ */
+
+public class HeavyBoxButton : ButtonBase
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

@@ -1,16 +1,27 @@
 using UnityEngine;
 
+/*
+
+    AudioManager : Core
+    Manages audio playback, including background music and sound effects. Keeps track of volume levels and audio settings.
+
+ */
+
 public class AudioManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

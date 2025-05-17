@@ -1,16 +1,27 @@
 using UnityEngine;
 
+/*
+ 
+    TimedButton : Platforming
+    Button that only stays active for a set amount of time when pressed.
+ 
+ */
+
 public class TimedButton : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

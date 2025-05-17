@@ -1,16 +1,27 @@
 using UnityEngine;
 
-public class Box : MonoBehaviour
+/*
+ 
+    Box : Platforming
+    Pushable box that can be moved by the player or other objects.
+ 
+ */
+
+public class Box : BoxBase
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

@@ -1,16 +1,27 @@
 using UnityEngine;
 
+/*
+
+    MeteorSpawner.cs : Hazards
+    Spawns meteors that fall from the sky and deal damage to the player on contact.
+
+*/
+
 public class MeteorSpawner : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

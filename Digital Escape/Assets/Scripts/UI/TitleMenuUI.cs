@@ -1,16 +1,27 @@
 using UnityEngine;
 
+/*
+ 
+    TitleMenuUI : UI
+    UI screen for the title menu.
+ 
+ */
+
 public class TitleMenuUI : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

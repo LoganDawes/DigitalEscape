@@ -1,16 +1,27 @@
 using UnityEngine;
 
-public class BirdBoss : MonoBehaviour
+/*
+ 
+    BirdBoss.cs : Bosses
+    Code for the Bird Boss behavior.
+ 
+ */
+
+public class BirdBoss : BossBase
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

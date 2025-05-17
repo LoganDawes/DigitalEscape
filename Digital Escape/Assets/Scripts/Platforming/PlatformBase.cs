@@ -1,16 +1,27 @@
 using UnityEngine;
 
+/*
+ 
+    PlatformBase : Platforming
+    Base class for all platform types.
+ 
+ */
+
 public class PlatformBase : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

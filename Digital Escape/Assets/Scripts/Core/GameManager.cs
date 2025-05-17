@@ -1,14 +1,26 @@
 using UnityEngine;
 
+/*
+
+    GameManager : Core
+    Responsible for managing the game state, including starting, pausing, and ending the game.
+    Keeps track of checkpoints and player progress through saves.
+
+ */
+
 public class GameManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
         
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
         

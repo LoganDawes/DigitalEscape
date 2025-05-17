@@ -1,16 +1,27 @@
 using UnityEngine;
 
-public class HeavyBox : MonoBehaviour
+/*
+ 
+    HeavyBox : Platforming
+    Box that is too heavy to be moved by the player without heavy powerup.
+ 
+ */
+
+public class HeavyBox : BoxBase
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

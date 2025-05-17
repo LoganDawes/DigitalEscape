@@ -1,16 +1,27 @@
 using UnityEngine;
 
+/*
+ 
+    BossBase.cs : Bosses
+    Base class for all bosses in the game.
+ 
+ */
+
 public class BossBase : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

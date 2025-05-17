@@ -1,5 +1,13 @@
 using UnityEngine;
 
+/*
+ 
+    PlayerController : Player
+    Controls the player's movement, jumping, and interactions with the environment.
+    Handles input and applies physics to the player character.
+ 
+ */
+
 public class PlayerController : MonoBehaviour
 {
     // Variables

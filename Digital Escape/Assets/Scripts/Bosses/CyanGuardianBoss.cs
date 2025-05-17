@@ -1,16 +1,27 @@
 using UnityEngine;
 
-public class CyanGuardianBoss : MonoBehaviour
+/*
+ 
+    CyanGuardianBoss.cs : Bosses
+    Code for the Cyan Guardian Boss behavior.
+ 
+ */
+
+public class CyanGuardianBoss : BossBase
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

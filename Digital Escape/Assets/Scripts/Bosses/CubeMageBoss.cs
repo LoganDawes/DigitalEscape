@@ -1,16 +1,27 @@
 using UnityEngine;
 
-public class CubeMageBoss : MonoBehaviour
+/*
+ 
+    CubeMageBoss.cs : Bosses
+    Code for the Cube Mage Boss behavior.
+ 
+ */
+
+public class CubeMageBoss : BossBase
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

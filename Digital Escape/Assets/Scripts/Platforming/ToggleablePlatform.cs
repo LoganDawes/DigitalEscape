@@ -1,16 +1,27 @@
 using UnityEngine;
 
-public class ToggleablePlatform : MonoBehaviour
+/*
+ 
+    ToggleablePlatform : Platforming
+    Platform that can be toggled on and off by a button.
+ 
+ */
+
+public class ToggleablePlatform : PlatformBase
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }

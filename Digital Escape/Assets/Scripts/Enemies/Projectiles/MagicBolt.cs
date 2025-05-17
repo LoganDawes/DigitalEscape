@@ -1,16 +1,27 @@
 using UnityEngine;
 
-public class MagicBolt : MonoBehaviour
+/*
+
+    MagicBolt : Projectiles
+    Magic bolt projectile that travels in a straight line and explodes on impact.
+
+ */
+
+public class MagicBolt : ProjectileBase
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Variables
+
+    // Components
+
+    // Start
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
+    // Update
     void Update()
     {
-        
+
     }
 }
