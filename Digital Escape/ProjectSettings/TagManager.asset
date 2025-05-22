@@ -16,7 +16,7 @@ TagManager:
   - Backdrop
   - Ground
   - Player
-  - 
+  - OneWayPlatform
   - 
   - 
   - 
@@ -51,6 +51,9 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 130182803
+    locked: 0
+  - name: Foreground
+    uniqueID: 2482270565
     locked: 0
   m_RenderingLayers:
   - Default

@@ -138,11 +138,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 10
   jumpForce: 15
+  dropTime: 0.5
+  isSneaking: 0
   groundCheck: {fileID: 56741381641411989}
   groundCheckRadius: 0.1
   groundLayer:
     serializedVersion: 2
     m_Bits: 128
+  oneWayPlatformLayer:
+    serializedVersion: 2
+    m_Bits: 512
   defaultSprite: {fileID: -1593477784551811952, guid: 43c2a79b46bc3d04e9a90ba70bf8744f, type: 3}
   sneakingSprite: {fileID: 3871083305316476565, guid: 3be5c981594cff64c9991872ef235d1f, type: 3}
   jumpSound: {fileID: 8300000, guid: 803834b81fce6514080c0633ecbfbd9a, type: 3}

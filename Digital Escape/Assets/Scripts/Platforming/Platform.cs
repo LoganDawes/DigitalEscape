@@ -18,10 +18,4 @@ public class Platform : MonoBehaviour
     {
 
     }
-
-    // Update
-    void Update()
-    {
-
-    }
 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 /*
  
@@ -14,6 +15,7 @@ public class PlayerController : MonoBehaviour
     [Header("Movement Settings")]
     public float moveSpeed = 10f;
     public float jumpForce = 10f;
+    public float dropTime = 0.5f;
 
     private bool isGrounded;
     private bool wasGrounded;
@@ -27,6 +29,8 @@ public class PlayerController : MonoBehaviour
     public Transform groundCheck;
     public float groundCheckRadius = 0.1f;
     public LayerMask groundLayer;
+    public LayerMask oneWayPlatformLayer;
+    private LayerMask combinedGroundLayer;
 
     [Header("Sprites")]
     public Sprite defaultSprite;
@@ -66,6 +70,14 @@ public class PlayerController : MonoBehaviour
         if (groundLayer == 0)
         {
             Debug.LogError("Ground layer not assigned in the inspector.");
+        }
+        else if (oneWayPlatformLayer == 0){
+            Debug.LogError("One way platform layer not assigned in the inspector.");
+        }
+        else
+        {
+            // Combine ground and one-way platform layers
+            combinedGroundLayer = groundLayer | oneWayPlatformLayer;
         }
 
         if (defaultSprite == null)
@@ -123,10 +135,10 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         // Ground check
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, combinedGroundLayer);
 
         // Landing detection
-        if (!wasGrounded && isGrounded)
+        if (!wasGrounded && isGrounded && rb.linearVelocity.y < 0.1f)
         {
             audioSource.PlayOneShot(landSound);
         }
@@ -167,11 +179,20 @@ public class PlayerController : MonoBehaviour
 
                 // Set jump force for hopping
                 jumpForce = originalJumpForce / 2f;
+
+                // Drop through platform
+                StartCoroutine(DropThroughPlatform());
+
+                // Set Audio Pitch higher
+                audioSource.pitch = 1.3f;
             }
             else
             {
                 // Reset sprite
                 spriteRenderer.sprite = defaultSprite;
+
+                // Reset Audio Pitch
+                audioSource.pitch = 1.0f;
 
                 // Play unsneak sound
                 audioSource.PlayOneShot(unsneakSound);
@@ -186,6 +207,29 @@ public class PlayerController : MonoBehaviour
 
             // Update sneaking state
             wasSneaking = isSneaking;
+        }
+    }
+
+    IEnumerator DropThroughPlatform()
+    {
+        // Find all colliders on the platform layer
+        Collider2D[] platforms = Physics2D.OverlapCircleAll(transform.position, 0.5f, oneWayPlatformLayer);
+
+        foreach (var platform in platforms)
+        {
+            // Disable collision between player and platform
+            Physics2D.IgnoreCollision(defaultCollider, platform, true);
+            Physics2D.IgnoreCollision(sneakingCollider, platform, true);
+        }
+
+        // Wait for a short time before re-enabling collision
+        yield return new WaitForSeconds(dropTime);
+
+        foreach (var platform in platforms)
+        {
+            // Re-enable collision after delay
+            Physics2D.IgnoreCollision(defaultCollider, platform, false);
+            Physics2D.IgnoreCollision(sneakingCollider, platform, false);
         }
     }
 }
