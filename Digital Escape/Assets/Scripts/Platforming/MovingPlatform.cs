@@ -7,7 +7,7 @@ using UnityEngine;
  
  */
 
-public class MovingPlatform : PlatformBase
+public class MovingPlatform : Platform
 {
     // Variables
 

@@ -2,12 +2,12 @@ using UnityEngine;
 
 /*
  
-    BoxBase : Platforming
-    Base class for all box types.
+    SubmarineBoss : Bosses
+    Code for the Submarine Boss behavior.
  
  */
 
-public class BoxBase : MonoBehaviour
+public class SubmarineBoss : BossBase
 {
     // Variables
 

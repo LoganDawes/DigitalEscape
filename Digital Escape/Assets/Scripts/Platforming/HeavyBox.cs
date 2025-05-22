@@ -7,7 +7,7 @@ using UnityEngine;
  
  */
 
-public class HeavyBox : BoxBase
+public class HeavyBox : Box
 {
     // Variables
 

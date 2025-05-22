@@ -2,7 +2,7 @@ using UnityEngine;
 
 /*
  
-    BirdBoss.cs : Bosses
+    BirdBoss : Bosses
     Code for the Bird Boss behavior.
  
  */

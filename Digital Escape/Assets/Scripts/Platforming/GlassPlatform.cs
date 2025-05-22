@@ -2,12 +2,12 @@ using UnityEngine;
 
 /*
  
-    StaticPlatform : Platforming
-    Completely static platform that does not move or rotate.
+    GlassPlatform : Platforming
+    Can be broken by the player using the heavy slam.
  
  */
 
-public class StaticPlatform : PlatformBase
+public class GlassPlatform : Platform
 {
     // Variables
 

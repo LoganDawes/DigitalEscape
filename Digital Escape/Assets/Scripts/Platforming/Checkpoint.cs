@@ -2,12 +2,12 @@ using UnityEngine;
 
 /*
  
-    Box : Platforming
-    Pushable box that can be moved by the player or other objects.
+    Checkpoint : Platforming
+    When touched, saves the game state and respawn point.
  
  */
 
-public class Box : MonoBehaviour
+public class Checkpoint : MonoBehaviour
 {
     // Variables
 

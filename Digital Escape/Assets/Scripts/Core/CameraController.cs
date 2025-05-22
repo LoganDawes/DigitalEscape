@@ -11,6 +11,7 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     // Variables
+    [Header("Camera Settings")]
     public Transform target;
     public float smoothSpeed = 0.125f;
     public Vector3 offset;
@@ -27,6 +28,8 @@ public class CameraController : MonoBehaviour
     {
         // Initialize components
         cam = GetComponent<Camera>();
+
+        // Variable & Component checks
         if (cam == null)
         {
             Debug.LogError("Camera component not found on the camera object.");

@@ -7,7 +7,7 @@ using UnityEngine;
  
  */
 
-public class ToggleablePlatform : PlatformBase
+public class ToggleablePlatform : Platform
 {
     // Variables
 

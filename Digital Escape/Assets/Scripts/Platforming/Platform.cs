@@ -2,12 +2,12 @@ using UnityEngine;
 
 /*
  
-    PlatformBase : Platforming
-    Base class for all platform types.
+    Platform : Platforming
+    Completely static platform that does not move or rotate.
  
  */
 
-public class PlatformBase : MonoBehaviour
+public class Platform : MonoBehaviour
 {
     // Variables
 
