@@ -17,7 +17,6 @@ public class PlayerController : MonoBehaviour
 
     private bool isGrounded;
     private bool isSneaking;
-    private bool isHopping;
     private Vector2 originalColliderSize;
     private float originalJumpForce;
 
@@ -29,8 +28,6 @@ public class PlayerController : MonoBehaviour
     [Header("Sprites")]
     public Sprite defaultSprite;
     public Sprite sneakingSprite;
-    public Sprite hoppingSprite;
-    public Sprite sneakingHoppingSprite;
 
     // Components
     private Rigidbody2D rb;
@@ -65,14 +62,6 @@ public class PlayerController : MonoBehaviour
         if (sneakingSprite == null)
         {
             Debug.LogError("Sneaking sprite not assigned in the inspector.");
-        }
-        if (hoppingSprite == null)
-        {
-            Debug.LogError("Hopping sprite not assigned in the inspector.");
-        }
-        if (sneakingHoppingSprite == null)
-        {
-            Debug.LogError("Sneaking & hopping sprite not assigned in the inspector.");
         }
         if (rb == null)
         {
@@ -116,53 +105,29 @@ public class PlayerController : MonoBehaviour
         {
             isSneaking = true;
 
+            // Set sprite for sneaking
+            spriteRenderer.sprite = sneakingSprite;
+
             // Set collider for sneaking
             defaultCollider.enabled = false;
             sneakingCollider.enabled = true;
+
+            // Set jump force for hopping
+            jumpForce = originalJumpForce / 2f;
         }
         else
         {
             isSneaking = false;
 
+            // Reset sprite
+            spriteRenderer.sprite = defaultSprite;
+
             // Reset collider
             defaultCollider.enabled = true;
             sneakingCollider.enabled = false;
-        }
 
-        // Hopping
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            // Toggle hopping state
-            isHopping = !isHopping;
-
-            if (isHopping)
-            {
-                // Set jump force for hopping
-                jumpForce = originalJumpForce / 2f;
-            }
-            else
-            {
-                // Reset jump force
-                jumpForce = originalJumpForce;
-            }
-        }
-
-        // Sprite Control
-        if (isHopping && isSneaking)
-        {
-            spriteRenderer.sprite = sneakingHoppingSprite;
-        }
-        else if (isHopping)
-        {
-            spriteRenderer.sprite = hoppingSprite;
-        }
-        else if (isSneaking)
-        {
-            spriteRenderer.sprite = sneakingSprite;
-        }
-        else
-        {
-            spriteRenderer.sprite = defaultSprite;
+            // Reset jump force
+            jumpForce = originalJumpForce;
         }
     }
 }
