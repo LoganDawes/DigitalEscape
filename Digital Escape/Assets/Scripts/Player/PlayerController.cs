@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
     private bool wasSneaking;
     private Vector2 originalColliderSize;
     private float originalJumpForce;
+    private float previousVerticalVelocity;
 
     [Header("Ground Check")]
     public Transform groundCheck;
@@ -65,14 +66,14 @@ public class PlayerController : MonoBehaviour
         // Variable & Component checks
         if (groundCheck == null)
         {
-            Debug.LogError("Ground check transform not assigned in the inspector.");
+            Debug.LogError("Ground check transform not assigned to player object.");
         }
         if (groundLayer == 0)
         {
-            Debug.LogError("Ground layer not assigned in the inspector.");
+            Debug.LogError("Ground layer not assigned to player object.");
         }
         else if (oneWayPlatformLayer == 0){
-            Debug.LogError("One way platform layer not assigned in the inspector.");
+            Debug.LogError("One way platform layer not assigned to player object.");
         }
         else
         {
@@ -82,28 +83,28 @@ public class PlayerController : MonoBehaviour
 
         if (defaultSprite == null)
         {
-            Debug.LogError("Default sprite not assigned in the inspector.");
+            Debug.LogError("Default sprite not assigned to player object.");
         }
         if (sneakingSprite == null)
         {
-            Debug.LogError("Sneaking sprite not assigned in the inspector.");
+            Debug.LogError("Sneaking sprite not assigned to player object.");
         }
 
         if (jumpSound == null)
         {
-            Debug.LogWarning("Jump sound not assigned in the inspector.");
+            Debug.LogWarning("Jump sound not assigned to player object.");
         }
         if (landSound == null)
         {
-            Debug.LogWarning("Land sound not assigned in the inspector.");
+            Debug.LogWarning("Land sound not assigned to player object.");
         }
         if (sneakSound == null)
         {
-            Debug.LogWarning("Sneak sound not assigned in the inspector.");
+            Debug.LogWarning("Sneak sound not assigned to player object.");
         }
         if (unsneakSound == null)
         {
-            Debug.LogWarning("Unsneak sound not assigned in the inspector.");
+            Debug.LogWarning("Unsneak sound not assigned to player object.");
         }
 
         if (rb == null)
@@ -138,7 +139,7 @@ public class PlayerController : MonoBehaviour
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, combinedGroundLayer);
 
         // Landing detection
-        if (!wasGrounded && isGrounded && rb.linearVelocity.y < 0.1f)
+        if (!wasGrounded && isGrounded && previousVerticalVelocity < -5f)
         {
             audioSource.PlayOneShot(landSound);
         }
@@ -208,6 +209,10 @@ public class PlayerController : MonoBehaviour
             // Update sneaking state
             wasSneaking = isSneaking;
         }
+
+        // Store current vertical velocity
+        previousVerticalVelocity = rb.linearVelocity.y;
+
     }
 
     IEnumerator DropThroughPlatform()
