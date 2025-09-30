@@ -9,19 +9,21 @@ using UnityEngine;
 
 public class BigButton : ButtonBase
 {
-    // Variables
-
-    // Components
-
-    // Start
-    void Start()
+    // OnTriggerEnter2D
+    void OnTriggerEnter2D(Collider2D other)
     {
-
+        if (other.CompareTag("Player"))
+        {
+            OnPressed();
+        }
     }
 
-    // Update
-    void Update()
+    // OnTriggerExit2D
+    void OnTriggerExit2D(Collider2D other)
     {
-
+        if (other.CompareTag("Player"))
+        {
+            OnPressed();
+        }
     }
 }

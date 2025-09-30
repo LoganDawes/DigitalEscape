@@ -19,12 +19,14 @@ public class PlayerController : MonoBehaviour
 
     private bool isGrounded;
     private bool wasGrounded;
-    private bool isJumping;
     private bool isSneaking;
     private bool wasSneaking;
     private Vector2 originalColliderSize;
     private float originalJumpForce;
     private float previousVerticalVelocity;
+
+    private MovingPlatform currentPlatform;
+    private Vector2 lastPlatformVelocity;
 
     [Header("Ground Check")]
     public Transform groundCheck;
@@ -55,7 +57,6 @@ public class PlayerController : MonoBehaviour
     {
         // Initialize variables
         originalJumpForce = jumpForce;
-        isJumping = false;
 
         // Initialize components
         rb = GetComponent<Rigidbody2D>();
@@ -152,8 +153,6 @@ public class PlayerController : MonoBehaviour
         // Jumping
         if (isGrounded && (Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.W)))
         {
-            isJumping = true;
-
             // Play jump sound
             audioSource.PlayOneShot(jumpSound);
 
@@ -189,21 +188,45 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                // Reset sprite
-                spriteRenderer.sprite = defaultSprite;
+                // Check if there is enough room to stand up
+                Vector2 checkPosition = (Vector2)transform.position + defaultCollider.offset;
+                Vector2 checkSize = defaultCollider.size;
 
-                // Reset Audio Pitch
-                audioSource.pitch = 1.0f;
+                // Slightly raise the check to avoid ground collision
+                checkPosition.y += (defaultCollider.size.y - sneakingCollider.size.y) / 2f;
 
-                // Play unsneak sound
-                audioSource.PlayOneShot(unsneakSound);
+                // Check for ground collision in the sneaking position
+                Collider2D hit = Physics2D.OverlapBox(
+                    checkPosition,
+                    checkSize,
+                    0f,
+                    combinedGroundLayer
+                );
 
-                // Reset collider
-                defaultCollider.enabled = true;
-                sneakingCollider.enabled = false;
+                // If there is no ground collision, allow unsneaking
+                if (hit == null)
+                {
+                    // Reset sprite
+                    spriteRenderer.sprite = defaultSprite;
 
-                // Reset jump force
-                jumpForce = originalJumpForce;
+                    // Reset Audio Pitch
+                    audioSource.pitch = 1.0f;
+
+                    // Play unsneak sound
+                    audioSource.PlayOneShot(unsneakSound);
+
+                    // Reset collider
+                    defaultCollider.enabled = true;
+                    sneakingCollider.enabled = false;
+
+                    // Reset jump force
+                    jumpForce = originalJumpForce;
+                }
+                else
+                {
+                    isSneaking = true;
+                    return;
+                }
             }
 
             // Update sneaking state
@@ -215,10 +238,56 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    // FixedUpdate
+    void FixedUpdate()
+    {
+        if (currentPlatform != null)
+        {
+            // Only apply horizontal platform velocity always
+            Vector2 platformVel = currentPlatform.platformVelocity;
+            rb.linearVelocity += new Vector2(platformVel.x, 0f);
+
+            // Only apply vertical platform velocity if the player is grounded and not moving upwards (not jumping)
+            if (isGrounded && rb.linearVelocity.y <= 0f)
+            {
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y + platformVel.y);
+            }
+
+            lastPlatformVelocity = currentPlatform.platformVelocity;
+        }
+        else
+        {
+            lastPlatformVelocity = Vector2.zero;
+        }
+
+        // Reset for next frame
+        currentPlatform = null;
+    }
+
+    // OnCollisionStay2D
+    void OnCollisionStay2D(Collision2D collision)
+    {
+        // Check if standing on a MovingPlatform
+        var platform = collision.collider.GetComponent<MovingPlatform>();
+        if (platform != null)
+        {
+            foreach (var contact in collision.contacts)
+            {
+                // Only consider contacts from below (standing on top)
+                if (contact.normal.y > 0.5f)
+                {
+                    currentPlatform = platform;
+                    break;
+                }
+            }
+        }
+    }
+
+    // DropThroughPlatform
     IEnumerator DropThroughPlatform()
     {
         // Find all colliders on the platform layer
-        Collider2D[] platforms = Physics2D.OverlapCircleAll(transform.position, 0.5f, oneWayPlatformLayer);
+        Collider2D[] platforms = Physics2D.OverlapCircleAll(transform.position, 1.0f, oneWayPlatformLayer);
 
         foreach (var platform in platforms)
         {
@@ -238,3 +307,4 @@ public class PlayerController : MonoBehaviour
         }
     }
 }
+

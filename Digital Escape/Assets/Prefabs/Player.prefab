@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 3176602556649437043}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.0832, z: 0}
+  m_LocalPosition: {x: 0, y: -0.52, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -63,7 +63,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -6.5, y: -2.5, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 56741381641411989}
@@ -139,9 +139,11 @@ MonoBehaviour:
   moveSpeed: 10
   jumpForce: 15
   dropTime: 0.5
-  isSneaking: 0
+  stepHeight: 0.55
+  stepCheckDistance: 1
+  stepSmoothness: 0.05
   groundCheck: {fileID: 56741381641411989}
-  groundCheckRadius: 0.1
+  groundCheckRadius: 0.3
   groundLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -215,17 +217,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 0.0019061565}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.16, y: 0.16}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 0.16, y: 0.16}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.16, y: 0.16}
+  m_Size: {x: 1.0063238, y: 0.99488735}
   m_EdgeRadius: 0
 --- !u!61 &3181081991327840955
 BoxCollider2D:
@@ -261,17 +263,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: -0.040038876}
+  m_Offset: {x: 0, y: -0.24780762}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.16, y: 0.16}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 0.16, y: 0.16}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.16, y: 0.079922244}
+  m_Size: {x: 1.0063238, y: 0.4954598}
   m_EdgeRadius: 0
 --- !u!82 &292935972559603096
 AudioSource:

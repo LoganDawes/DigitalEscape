@@ -23,8 +23,8 @@ public class ButtonBase : MonoBehaviour
     private BoxCollider2D buttonCollider;
     private SpriteRenderer spriteRenderer;
 
-    // Start
-    void Start()
+    // Awake
+    void Awake()
     {
         // Initialize components
         buttonCollider = GetComponent<BoxCollider2D>();
@@ -51,8 +51,12 @@ public class ButtonBase : MonoBehaviour
         {
             Debug.LogError("SpriteRenderer component not found on the button object");
         }
+    }
 
-        // Set initial sprite based on active state
+    // Start
+    void Start()
+    {
+        // Ensure the button starts with the correct sprite
         spriteRenderer.sprite = isActive ? activeSprite : inactiveSprite;
     }
 
