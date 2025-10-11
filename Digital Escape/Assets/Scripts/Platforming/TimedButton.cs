@@ -7,21 +7,44 @@ using UnityEngine;
  
  */
 
-public class TimedButton : MonoBehaviour
+public class TimedButton : Button
 {
     // Variables
-
-    // Components
-
-    // Start
-    void Start()
-    {
-
-    }
+    [Header("Timed Button")]
+    public float timer = 2f;
+    private float timerCounter = 0f;
+    private bool timing = false;
 
     // Update
-    void Update()
+    protected override void Update()
     {
+        // Base update for player interaction
+        base.Update();
 
+        if (timing)
+        {
+            timerCounter -= Time.deltaTime;
+            if (timerCounter <= 0f)
+            {
+                timing = false;
+                OnPressed(); // Un-activate
+            }
+        }
+    }
+
+    // OnPressed Override
+    public override void OnPressed()
+    {
+        if (!isActive)
+        {
+            base.OnPressed();
+            timing = true;
+            timerCounter = timer;
+        }
+        else
+        {
+            base.OnPressed();
+            timing = false;
+        }
     }
 }

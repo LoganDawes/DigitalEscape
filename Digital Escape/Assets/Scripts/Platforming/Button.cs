@@ -13,7 +13,7 @@ public class Button : ButtonBase
     private bool playerInRange = false;
 
     // Update
-    void Update()
+    protected virtual void Update()
     {
         // Player interaction with E
         if (playerInRange && Input.GetKeyDown(KeyCode.E))

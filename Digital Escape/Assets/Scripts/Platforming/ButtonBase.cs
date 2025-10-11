@@ -61,7 +61,7 @@ public class ButtonBase : MonoBehaviour
     }
 
     // OnPressed
-    public void OnPressed()
+    public virtual void OnPressed()
     {
         isActive = !isActive;
 
