@@ -111,7 +111,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 130182803
-  m_SortingLayer: 3
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: -1593477784551811952, guid: 43c2a79b46bc3d04e9a90ba70bf8744f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -139,9 +139,7 @@ MonoBehaviour:
   moveSpeed: 10
   jumpForce: 15
   dropTime: 0.5
-  stepHeight: 0.55
-  stepCheckDistance: 1
-  stepSmoothness: 0.05
+  waterExitBoost: 10
   groundCheck: {fileID: 56741381641411989}
   groundCheckRadius: 0.3
   groundLayer:

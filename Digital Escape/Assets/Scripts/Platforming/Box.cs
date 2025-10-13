@@ -12,6 +12,9 @@ using UnityEngine;
 
 public class Box : MonoBehaviour
 {
+    // Variables
+    private bool isInWater = false;
+
     // Components
     private Rigidbody2D rb;
     private MovingPlatform currentPlatform;
@@ -30,6 +33,30 @@ public class Box : MonoBehaviour
         if (currentPlatform != null)
         {
             rb.linearVelocity += currentPlatform.platformVelocity;
+        }
+
+        // Slow descent in water
+        if (isInWater && rb.linearVelocity.y < 0)
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, Mathf.Lerp(rb.linearVelocity.y, -1f, 0.1f));
+        }
+    }
+
+    // OnTriggerEnter2D
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Water"))
+        {
+            isInWater = true;
+        }
+    }
+
+    // OnTriggerExit2D
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Water"))
+        {
+            isInWater = false;
         }
     }
 

@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 10f;
     public float jumpForce = 10f;
     public float dropTime = 0.5f;
+    public float waterExitBoost = 12f;
+    private float lastWaterY;
 
     private bool isGrounded;
     private bool wasGrounded;
@@ -28,6 +30,8 @@ public class PlayerController : MonoBehaviour
     private bool wasSneaking;
     private Vector2 originalColliderSize;
     private float originalJumpForce;
+    private float originalMoveSpeed;
+    private bool isInWater = false;
     private float previousVerticalVelocity;
 
     private MovingPlatform currentPlatform;
@@ -61,7 +65,8 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         // Initialize variables
-        originalJumpForce = jumpForce;
+    originalJumpForce = jumpForce;
+    originalMoveSpeed = moveSpeed;
 
         // Initialize components
         rb = GetComponent<Rigidbody2D>();
@@ -139,18 +144,44 @@ public class PlayerController : MonoBehaviour
         }
         wasGrounded = isGrounded;
 
-        // Horizontal movement
-        float moveInput = Input.GetAxis("Horizontal");
-        rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
-
-        // Jumping
-        if (isGrounded && (Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.W)))
+        if (isInWater)
         {
-            // Play jump sound
-            audioSource.PlayOneShot(jumpSound);
+            // Water movement: dampen horizontal, slow descent, allow upward movement
+            float moveInput = Input.GetAxis("Horizontal");
+            float verticalInput = Input.GetAxis("Vertical");
 
-            // Jump force
-            rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+            // Horizontal movement dampened
+            float waterMoveSpeed = moveSpeed * 0.5f;
+            float xVel = moveInput * waterMoveSpeed;
+
+            // Vertical movement: holding up moves player upwards
+            float yVel = rb.linearVelocity.y;
+            if (verticalInput > 0f)
+            {
+                yVel = Mathf.Lerp(yVel, moveSpeed * 0.5f, 0.1f); // swim up
+            }
+            else if (yVel < 0)
+            {
+                yVel = Mathf.Lerp(yVel, -moveSpeed * 0.2f, 0.1f); // slow descent
+            }
+
+            rb.linearVelocity = new Vector2(xVel, yVel);
+        }
+        else
+        {
+            // Normal movement
+            float moveInput = Input.GetAxis("Horizontal");
+            rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
+
+            // Jumping
+            if (isGrounded && (Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.W)))
+            {
+                // Play jump sound
+                audioSource.PlayOneShot(jumpSound);
+
+                // Jump force
+                rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+            }
         }
 
         // Sneaking
@@ -255,6 +286,30 @@ public class PlayerController : MonoBehaviour
 
         // Reset for next frame
         currentPlatform = null;
+    }
+
+    // Water trigger detection
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Water"))
+        {
+            isInWater = true;
+            lastWaterY = transform.position.y;
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Water"))
+        {
+            // Only boost if exiting upwards
+            float currentY = transform.position.y;
+            if (currentY > lastWaterY)
+            {
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, waterExitBoost);
+            }
+            isInWater = false;
+        }
     }
 
     // OnCollisionStay2D
