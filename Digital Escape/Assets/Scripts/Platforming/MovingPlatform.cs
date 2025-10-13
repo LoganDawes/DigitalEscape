@@ -9,6 +9,9 @@ using UnityEngine;
  
  */
 
+[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(BoxCollider2D))]
+
 public class MovingPlatform : Platform, IActivatable
 {
     // Variables
@@ -39,16 +42,6 @@ public class MovingPlatform : Platform, IActivatable
         // Initialize components
         rb = GetComponent<Rigidbody2D>();
         platformCollider = GetComponent<BoxCollider2D>();
-
-        // Variable & Component checks
-        if (rb == null)
-        {
-            Debug.LogError("Rigidbody2D component not found on the moving platform object");
-        }
-        if (platformCollider == null)
-        {
-            Debug.LogError("BoxCollider2D component not found on the moving platform object");
-        }
 
         // Set initial state of moving
         isMoving = isActive;

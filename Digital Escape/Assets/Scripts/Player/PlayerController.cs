@@ -9,6 +9,11 @@ using System.Collections;
  
  */
 
+[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(BoxCollider2D))]
+[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(AudioSource))]
+
 public class PlayerController : MonoBehaviour
 {
     // Variables
@@ -73,7 +78,8 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogError("Ground layer not assigned to player object.");
         }
-        else if (oneWayPlatformLayer == 0){
+        else if (oneWayPlatformLayer == 0)
+        {
             Debug.LogError("One way platform layer not assigned to player object.");
         }
         else
@@ -107,11 +113,6 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogWarning("Unsneak sound not assigned to player object.");
         }
-
-        if (rb == null)
-        {
-            Debug.LogError("Rigidbody2D component not found on the player object.");
-        }
         if (colliders.Length < 2)
         {
             Debug.LogError("Player object must have two BoxCollider2D components (normal and sneaking).");
@@ -122,14 +123,6 @@ public class PlayerController : MonoBehaviour
             sneakingCollider = colliders[1];
             defaultCollider.enabled = true;
             sneakingCollider.enabled = false;
-        }
-        if (spriteRenderer == null)
-        {
-            Debug.LogError("SpriteRenderer component not found on the player object.");
-        }
-        if (audioSource == null)
-        {
-            Debug.LogError("AudioSource component not found on the player object.");
         }
     }
 
