@@ -2,17 +2,17 @@ using UnityEngine;
 
 /*
  
-    BigButton : Platforming
-    Button that activates attached components when stood on / box collided with.
+    PlayerButton : Platforming
+    Button that activates attached components when stood on.
  
  */
 
-public class BigButton : ButtonBase
+public class PlayerButton : ButtonBase
 {
     // OnTriggerEnter2D
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player") || other.CompareTag("Box"))
+        if (other.CompareTag("Player"))
         {
             OnPressed();
         }
@@ -21,7 +21,7 @@ public class BigButton : ButtonBase
     // OnTriggerExit2D
     void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player") || other.CompareTag("Box"))
+        if (other.CompareTag("Player"))
         {
             OnPressed();
         }

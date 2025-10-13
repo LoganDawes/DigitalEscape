@@ -9,19 +9,21 @@ using UnityEngine;
 
 public class BoxButton : ButtonBase
 {
-    // Variables
-
-    // Components
-
-    // Start
-    void Start()
+    // OnTriggerEnter2D
+    void OnTriggerEnter2D(Collider2D other)
     {
-
+        if (other.CompareTag("Box"))
+        {
+            OnPressed();
+        }
     }
 
-    // Update
-    void Update()
+    // OnTriggerExit2D
+    void OnTriggerExit2D(Collider2D other)
     {
-
+        if (other.CompareTag("Box"))
+        {
+            OnPressed();
+        }
     }
 }
