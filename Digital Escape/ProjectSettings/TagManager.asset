@@ -19,7 +19,7 @@ TagManager:
   - Player
   - OneWayPlatform
   - Interactable
-  - 
+  - Elevator
   - 
   - 
   - 
@@ -47,11 +47,11 @@ TagManager:
   - name: Backdrop
     uniqueID: 980607871
     locked: 0
-  - name: Ground
-    uniqueID: 2457243843
-    locked: 0
   - name: Player
     uniqueID: 130182803
+    locked: 0
+  - name: Ground
+    uniqueID: 2457243843
     locked: 0
   - name: Foreground
     uniqueID: 2482270565
