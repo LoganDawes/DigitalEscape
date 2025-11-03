@@ -35,6 +35,9 @@ public class PlayerController : MonoBehaviour
 
     private MovingPlatform currentPlatform;
 
+        [Header("Powerup")]
+    [SerializeField] private PowerupType currentPowerup = PowerupType.None;
+
     [Header("Ground Check")]
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckRadius = 0.1f;
@@ -510,6 +513,21 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+    }
+
+    public bool SetPowerup(PowerupType type)
+    {
+        if (currentPowerup == PowerupType.None && type != PowerupType.None)
+        {
+            currentPowerup = type;
+            return true;
+        }
+        return false;
+    }
+
+    public PowerupType GetPowerup()
+    {
+        return currentPowerup;
     }
 }
 
