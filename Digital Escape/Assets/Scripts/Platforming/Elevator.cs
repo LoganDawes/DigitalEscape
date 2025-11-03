@@ -16,12 +16,12 @@ public class Elevator : MonoBehaviour, IActivatable
 {
     // Variables
     [Header("Elevator Settings")]
-    public List<Transform> trackPoints = new List<Transform>();
-    public float moveSpeed = 2f;
+    [SerializeField] private List<Transform> trackPoints = new List<Transform>();
+    [SerializeField] private float moveSpeed = 2f;
 
     [Header("Collision Layers")]
-    public string groundLayerName = "Ground";
-    public string oneWayPlatformLayerName = "OneWayPlatform";
+    [SerializeField] private string groundLayerName = "Ground";
+    [SerializeField] private string oneWayPlatformLayerName = "OneWayPlatform";
 
     private int groundLayer;
     private int oneWayPlatformLayer;

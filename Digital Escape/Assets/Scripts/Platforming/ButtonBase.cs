@@ -11,14 +11,14 @@ public class ButtonBase : MonoBehaviour
 {
     // Variables
     [Header("Sprites")]
-    public Sprite activeSprite;
-    public Sprite inactiveSprite;
+    [SerializeField] private Sprite activeSprite;
+    [SerializeField] private Sprite inactiveSprite;
 
     public bool isActive = false;
 
     // Components
     private IActivatable activatable;
-    public GameObject connectedObject;
+    [SerializeField] private GameObject connectedObject;
 
     private BoxCollider2D buttonCollider;
     private SpriteRenderer spriteRenderer;

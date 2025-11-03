@@ -11,7 +11,7 @@ public class TimedButton : Button
 {
     // Variables
     [Header("Timed Button")]
-    public float timer = 2f;
+    [SerializeField] private float timer = 2f;
     private float timerCounter = 0f;
     private bool timing = false;
 

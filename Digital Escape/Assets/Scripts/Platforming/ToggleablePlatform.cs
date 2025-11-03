@@ -11,10 +11,10 @@ public class ToggleablePlatform : Platform, IActivatable
 {
     // Variables
     [Header("Sprites")]
-    public Sprite activeSprite;
-    public Sprite inactiveSprite;
+    [SerializeField] private Sprite activeSprite;
+    [SerializeField] private Sprite inactiveSprite;
 
-    public bool isActive = true;
+    [SerializeField] private bool isActive = true;
 
     // Components
     private BoxCollider2D platformCollider;

@@ -10,9 +10,9 @@ using UnityEngine;
 public class PlayerHealthUI : MonoBehaviour
 {
     // Variables
-    public Transform player;
-    public Vector3 offset = new Vector3(0, 2, 0);
-    public UnityEngine.UI.Image[] healthBars;
+    [SerializeField] private Transform player;
+    [SerializeField] private Vector3 offset = new Vector3(0, 2, 0);
+    [SerializeField] private UnityEngine.UI.Image[] healthBars;
 
     // Start
     void Start()

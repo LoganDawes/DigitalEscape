@@ -16,11 +16,11 @@ public class MovingPlatform : Platform, IActivatable
 {
     // Variables
     [Header("Moving Platform Settings")]
-    public List<Transform> trackPoints = new List<Transform>();
-    public float moveSpeed = 2f;
-    public float waitTime = 1f;
+    [SerializeField] private List<Transform> trackPoints = new List<Transform>();
+    [SerializeField] private float moveSpeed = 2f;
+    [SerializeField] private float waitTime = 1f;
 
-    public bool isActive = true;
+    [SerializeField] private bool isActive = true;
 
     [HideInInspector]
     public Vector2 platformVelocity;
