@@ -1,13 +1,13 @@
 using UnityEngine;
 
 /*
+ 
+    PowerupBase : Powerups
+    Base class for all powerups.
+ 
+ */
 
-    Spikes.cs : Hazards
-    Basic hazard that deals damage to the player on contact.
-
-*/
-
-public class Spikes : HazardBase
+public class Powerup : MonoBehaviour
 {
     // Variables
 
