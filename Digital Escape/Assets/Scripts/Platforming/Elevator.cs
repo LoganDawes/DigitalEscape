@@ -217,6 +217,7 @@ public class Elevator : MonoBehaviour, IActivatable
         }
     }
 
+# if UNITY_EDITOR
     // OnDrawGizmos
     void OnDrawGizmos()
     {
@@ -253,7 +254,7 @@ public class Elevator : MonoBehaviour, IActivatable
             {
                 // Save the current matrix
                 Matrix4x4 oldMatrix = Gizmos.matrix;
-                
+
                 // Apply position, rotation, and object's scale
                 Gizmos.matrix = Matrix4x4.TRS(t.position, transform.rotation, transform.lossyScale);
                 Gizmos.DrawWireCube(offset, size);
@@ -263,4 +264,5 @@ public class Elevator : MonoBehaviour, IActivatable
             }
         }
     }
+#endif
 }

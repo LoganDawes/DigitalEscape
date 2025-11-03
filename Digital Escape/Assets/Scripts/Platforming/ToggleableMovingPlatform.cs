@@ -172,6 +172,7 @@ public class ToggleableMovingPlatform : Platform, IActivatable
         isBlocked = false;
     }
 
+# if UNITY_EDITOR
     // OnDrawGizmos
     void OnDrawGizmos()
     {
@@ -215,6 +216,7 @@ public class ToggleableMovingPlatform : Platform, IActivatable
             }
         }
     }
+#endif
 }
 
 

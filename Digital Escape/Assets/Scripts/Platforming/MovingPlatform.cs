@@ -148,6 +148,7 @@ public class MovingPlatform : Platform, IActivatable
         isBlocked = false;
     }
 
+# if UNITY_EDITOR
     // OnDrawGizmos
     void OnDrawGizmos()
     {
@@ -191,6 +192,7 @@ public class MovingPlatform : Platform, IActivatable
             }
         }
     }
+#endif
 }
 
 

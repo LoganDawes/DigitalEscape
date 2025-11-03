@@ -71,4 +71,34 @@ public class ButtonBase : MonoBehaviour
         // Execute the onActivated method on the connected object if it exists
         activatable?.onActivated();
     }
+
+# if UNITY_EDITOR
+    void OnDrawGizmos()
+    {
+        if (connectedObject != null)
+        {
+            Vector3 start = transform.position;
+            Vector3 end = connectedObject.transform.position;
+            float dashLength = 0.2f;
+            float gapLength = 0.1f;
+            float distance = Vector3.Distance(start, end);
+            Vector3 direction = (end - start).normalized;
+
+            float drawn = 0f;
+            bool draw = true;
+            while (drawn < distance)
+            {
+                float segment = draw ? dashLength : gapLength;
+                float next = Mathf.Min(segment, distance - drawn);
+                if (draw)
+                {
+                    Gizmos.color = Color.yellow;
+                    Gizmos.DrawLine(start + direction * drawn, start + direction * (drawn + next));
+                }
+                drawn += next;
+                draw = !draw;
+            }
+        }
+    }
+# endif
 }
