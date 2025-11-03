@@ -429,11 +429,15 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.collider.CompareTag("Hazard"))
         {
-            HazardCollision(collision);
+            HazardCollision(collision, 1.0f);
+        }
+        else if (collision.collider.CompareTag("ExplosiveHazard"))
+        {
+            HazardCollision(collision, 2.0f);
         }
     }
 
-    private void HazardCollision(Collision2D hazard)
+    private void HazardCollision(Collision2D hazard, float magnitude)
     {
         // Lose one health
         currentHealth = Mathf.Max(0, currentHealth - 1);
@@ -475,7 +479,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        rb.AddForce(knockbackDir * knockbackForce, ForceMode2D.Impulse);
+        rb.AddForce(knockbackDir * knockbackForce * magnitude, ForceMode2D.Impulse);
 
         // Disable movement for knockback duration
         isKnockbacked = true;

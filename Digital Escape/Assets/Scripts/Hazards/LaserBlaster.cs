@@ -17,9 +17,16 @@ public class LaserBlaster : HazardBase, IActivatable
     [SerializeField] private LayerMask hitMask;
 
     private GameObject currentLaser;
-    private bool isActive = false;
+    [SerializeField] private bool isActive = false;
 
-    // Called by button or activator
+    void Start()
+    {
+        if (isActive)
+        {
+            FireLaser();
+        }
+    }
+
     public void onActivated()
     {
         if (!isActive)
@@ -68,13 +75,12 @@ public class LaserBlaster : HazardBase, IActivatable
     // Adjust collider size and position
     var boxCol = currentLaser.GetComponent<BoxCollider2D>();
     float length = distance;
-    // The collider should cover the full length and width of the laser
     boxCol.size = new Vector2(length, laserWidth);
-    boxCol.offset = Vector2.zero;
+    // Offset the collider so it starts at the origin and extends forward
+    boxCol.offset = new Vector2(length / 2f, 0f);
     boxCol.isTrigger = false;
-    // Position the laser at the midpoint
-    Vector3 midPoint = (origin + endPoint) / 2f;
-    currentLaser.transform.position = midPoint;
+    // Position the laser at the origin
+    currentLaser.transform.position = origin;
     float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
     currentLaser.transform.rotation = Quaternion.Euler(0, 0, angle);
     }
