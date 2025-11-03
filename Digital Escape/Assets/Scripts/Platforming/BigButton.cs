@@ -9,10 +9,22 @@ using UnityEngine;
 
 public class BigButton : ButtonBase
 {
+    public string[] activatorTags;
+
+    private bool IsActivatorTag(string tag)
+    {
+        foreach (var t in activatorTags)
+        {
+            if (tag == t)
+                return true;
+        }
+        return false;
+    }
+
     // OnTriggerEnter2D
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player") || other.CompareTag("Box"))
+        if (IsActivatorTag(other.tag))
         {
             OnPressed();
         }
@@ -21,7 +33,7 @@ public class BigButton : ButtonBase
     // OnTriggerExit2D
     void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player") || other.CompareTag("Box"))
+        if (IsActivatorTag(other.tag))
         {
             OnPressed();
         }

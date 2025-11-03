@@ -61,7 +61,7 @@ public class Box : MonoBehaviour
     }
 
     // OnCollisionStay2D
-    void OnCollisionStay2D(Collision2D collision)
+    protected virtual void OnCollisionStay2D(Collision2D collision)
     {
         // Check if standing on a MovingPlatform
         var platform = collision.collider.GetComponent<MovingPlatform>();
