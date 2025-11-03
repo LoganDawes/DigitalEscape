@@ -8,6 +8,8 @@ TagManager:
   - Backdrop
   - Box
   - Water
+  - Hazard
+  - MovingPlatform
   layers:
   - Default
   - TransparentFX

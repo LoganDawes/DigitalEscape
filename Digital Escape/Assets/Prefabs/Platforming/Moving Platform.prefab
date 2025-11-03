@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6283838895290281062}
   m_Layer: 7
   m_Name: Moving Platform
-  m_TagString: Ground
+  m_TagString: MovingPlatform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -57,6 +57,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -78,8 +80,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1837723453
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: -5113850848988359095, guid: 2fb92272dc1981641b509cd814c66500, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
@@ -167,6 +170,7 @@ MonoBehaviour:
   moveSpeed: 2
   waitTime: 1
   isActive: 1
+  platformVelocity: {x: 0, y: 0}
 --- !u!50 &6283838895290281062
 Rigidbody2D:
   serializedVersion: 5

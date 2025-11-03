@@ -10,18 +10,42 @@ using UnityEngine;
 public class PlayerHealthUI : MonoBehaviour
 {
     // Variables
-
-    // Components
+    public Transform player;
+    public Vector3 offset = new Vector3(0, 2, 0);
+    public UnityEngine.UI.Image[] healthBars;
 
     // Start
     void Start()
     {
-
+        if (player == null)
+        {
+            GameObject playerObj = GameObject.FindWithTag("Player");
+            if (playerObj != null)
+                player = playerObj.transform;
+        }
     }
 
     // Update
     void Update()
     {
+        if (player == null || healthBars == null || healthBars.Length == 0)
+            return;
 
+    // Position health bar above player in world space
+    transform.position = player.position + offset;
+    // Optional: make the health bar always face the camera
+    transform.LookAt(Camera.main.transform);
+
+        // Get health from PlayerController
+        int health = 3;
+        var pc = player.GetComponent<PlayerController>();
+        if (pc != null)
+            health = (int)pc.currentHealth;
+
+        // Update health bar visibility
+        for (int i = 0; i < healthBars.Length; i++)
+        {
+            healthBars[i].enabled = i < health;
+        }
     }
 }
