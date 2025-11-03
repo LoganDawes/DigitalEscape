@@ -30,13 +30,17 @@ public class PlayerController : MonoBehaviour
     private bool isSneaking;
     private bool wasSneaking;
     private float originalJumpForce;
+    private float originalGravityScale;
     private bool isInWater = false;
     private float previousVerticalVelocity;
 
     private MovingPlatform currentPlatform;
 
-        [Header("Powerup")]
+    [Header("Powerup")]
     [SerializeField] private PowerupType currentPowerup = PowerupType.None;
+    [SerializeField] private float heavyJumpForceMultiplier = 0.8f;
+    [SerializeField] private float heavySneakGravityScale = 20f;
+    private bool heavySneakActive = false;
 
     [Header("Ground Check")]
     [SerializeField] private Transform groundCheck;
@@ -102,6 +106,7 @@ public class PlayerController : MonoBehaviour
             defaultCollider.enabled = true;
             sneakingCollider.enabled = false;
         }
+        originalGravityScale = GetComponent<Rigidbody2D>().gravityScale;
     }
 
     private void ComponentChecks()
@@ -196,8 +201,9 @@ public class PlayerController : MonoBehaviour
                 rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
             }
         }
-
+        
         // Jumping
+        UpdateJumpForce();
         if (isGrounded && (Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.W)))
         {
             audioSource.PlayOneShot(jumpSound);
@@ -206,7 +212,7 @@ public class PlayerController : MonoBehaviour
 
         // Sneaking logic
         SneakingDetection();
-
+        
         // Store previous vertical velocity for landing detection
         previousVerticalVelocity = rb.linearVelocity.y;
     }
@@ -277,10 +283,56 @@ public class PlayerController : MonoBehaviour
 
         rb.linearVelocity = new Vector2(xVel, yVel);
     }
+
+        private void UpdateJumpForce()
+    {
+        if (currentPowerup == PowerupType.Heavy)
+        {
+            jumpForce = originalJumpForce * heavyJumpForceMultiplier;
+        }
+        else if (isSneaking)
+        {
+            jumpForce = originalJumpForce / 2f;
+        }
+        else
+        {
+            jumpForce = originalJumpForce;
+        }
+    }
     
     private void SneakingDetection()
     {
-        isSneaking = Input.GetKey(KeyCode.S);
+        isSneaking = Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.LeftShift);
+
+        if (currentPowerup == PowerupType.Heavy)
+        {
+            // Heavy: Sneaking only affects speed and gravity, not collider/sprite
+            if (isSneaking && !heavySneakActive)
+            {
+                // Increase gravity while sneaking
+                rb.gravityScale = heavySneakGravityScale;
+                audioSource.PlayOneShot(sneakSound);
+                heavySneakActive = true;
+            }
+            else if (!isSneaking && heavySneakActive)
+            {
+                // Restore gravity
+                rb.gravityScale = originalGravityScale;
+                audioSource.PlayOneShot(unsneakSound);
+                heavySneakActive = false;
+            }
+            wasSneaking = isSneaking;
+            return;
+        }
+        else
+        {
+            // Restore gravity if not Heavy
+            if (heavySneakActive)
+            {
+                rb.gravityScale = originalGravityScale;
+                heavySneakActive = false;
+            }
+        }
 
         if (isSneaking != wasSneaking)
         {
@@ -295,9 +347,6 @@ public class PlayerController : MonoBehaviour
                 // Set collider for sneaking
                 defaultCollider.enabled = false;
                 sneakingCollider.enabled = true;
-
-                // Set jump force for hopping
-                jumpForce = originalJumpForce / 2f;
 
                 // Drop through platform
                 StartCoroutine(DropThroughPlatform());
@@ -337,9 +386,6 @@ public class PlayerController : MonoBehaviour
                     // Reset collider
                     defaultCollider.enabled = true;
                     sneakingCollider.enabled = false;
-
-                    // Reset jump force
-                    jumpForce = originalJumpForce;
                 }
                 else
                 {
@@ -520,7 +566,20 @@ public class PlayerController : MonoBehaviour
         if (currentPowerup == PowerupType.None && type != PowerupType.None)
         {
             currentPowerup = type;
+            // Apply Heavy powerup
+            if (type == PowerupType.Heavy)
+            {
+                spriteRenderer.sprite = defaultSprite;
+                defaultCollider.enabled = true;
+                sneakingCollider.enabled = false;
+            }
             return true;
+        }
+        else if (currentPowerup != PowerupType.None && type == PowerupType.None)
+        {
+            // Restore normal jump force and gravity
+            rb.gravityScale = originalGravityScale;
+            heavySneakActive = false;
         }
         return false;
     }
