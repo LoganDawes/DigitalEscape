@@ -288,6 +288,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -309,6 +311,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 130182803
   m_SortingLayer: 2
   m_SortingOrder: 0
@@ -351,6 +354,7 @@ MonoBehaviour:
     m_Bits: 512
   knockbackForce: 15
   knockbackDuration: 0.2
+  knockbackRecoveryDuration: 1
   defaultSprite: {fileID: -1593477784551811952, guid: 43c2a79b46bc3d04e9a90ba70bf8744f, type: 3}
   sneakingSprite: {fileID: 3871083305316476565, guid: 3be5c981594cff64c9991872ef235d1f, type: 3}
   jumpSound: {fileID: 8300000, guid: 803834b81fce6514080c0633ecbfbd9a, type: 3}

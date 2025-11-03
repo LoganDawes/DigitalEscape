@@ -18,11 +18,11 @@ public class PlayerController : MonoBehaviour
 {
     // Variables
     [Header("Movement Settings")]
-    public float moveSpeed = 10f;
-    public float jumpForce = 10f;
-    public float dropTime = 0.5f;
-    public float waterExitBoost = 12f;
-    public float maxHealth = 3;
+    [SerializeField] private float moveSpeed = 10f;
+    [SerializeField] private float jumpForce = 10f;
+    [SerializeField] private float dropTime = 0.5f;
+    [SerializeField] private float waterExitBoost = 12f;
+    [SerializeField] private float maxHealth = 3;
     public float currentHealth;
     private float lastWaterY;
     private bool isGrounded;
@@ -36,31 +36,31 @@ public class PlayerController : MonoBehaviour
     private MovingPlatform currentPlatform;
 
     [Header("Ground Check")]
-    public Transform groundCheck;
-    public float groundCheckRadius = 0.1f;
-    public LayerMask groundLayer;
-    public LayerMask oneWayPlatformLayer;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private float groundCheckRadius = 0.1f;
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private LayerMask oneWayPlatformLayer;
     private LayerMask combinedGroundLayer;
 
     [Header("Knockback Settings")]
-    public float knockbackForce = 10f;
-    public float knockbackDuration = 0.3f;
+    [SerializeField] private float knockbackForce = 10f;
+    [SerializeField] private float knockbackDuration = 0.3f;
     private bool isKnockbacked = false;
     private float knockbackTimer = 0f;
 
     [Header("Knockback Recovery")]
-    public float knockbackRecoveryDuration = 0.2f;
+    [SerializeField] private float knockbackRecoveryDuration = 1.0f;
     private float knockbackRecoveryTimer = 0f;
 
     [Header("Sprites")]
-    public Sprite defaultSprite;
-    public Sprite sneakingSprite;
+    [SerializeField] private Sprite defaultSprite;
+    [SerializeField] private Sprite sneakingSprite;
 
     [Header("Audio")]
-    public AudioClip jumpSound;
-    public AudioClip landSound;
-    public AudioClip sneakSound;
-    public AudioClip unsneakSound;
+    [SerializeField] private AudioClip jumpSound;
+    [SerializeField] private AudioClip landSound;
+    [SerializeField] private AudioClip sneakSound;
+    [SerializeField] private AudioClip unsneakSound;
 
     // Components
     private Rigidbody2D rb;
@@ -168,9 +168,16 @@ public class PlayerController : MonoBehaviour
             float moveInput = Input.GetAxis("Horizontal");
             float targetXVel = moveInput * moveSpeed;
             float t = 1f - (knockbackRecoveryTimer / knockbackRecoveryDuration);
-            rb.linearVelocity = new Vector2(Mathf.Lerp(rb.linearVelocity.x, targetXVel, t), rb.linearVelocity.y);
+            if (isInWater)
+            {
+                WaterMovement(t, targetXVel);
+            }
+            else
+            {
+                // Interpolate x velocity, keep y
+                rb.linearVelocity = new Vector2(Mathf.Lerp(rb.linearVelocity.x, targetXVel, t), rb.linearVelocity.y);
+            }
             knockbackRecoveryTimer -= Time.deltaTime;
-            // Skip normal movement during recovery
         }
         else
         {
@@ -184,14 +191,14 @@ public class PlayerController : MonoBehaviour
                 // Normal movement
                 float moveInput = Input.GetAxis("Horizontal");
                 rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
-
-                // Jumping
-                if (isGrounded && (Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.W)))
-                {
-                    audioSource.PlayOneShot(jumpSound);
-                    rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
-                }
             }
+        }
+
+        // Jumping
+        if (isGrounded && (Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.W)))
+        {
+            audioSource.PlayOneShot(jumpSound);
+            rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
         }
 
         // Sneaking logic
@@ -234,6 +241,12 @@ public class PlayerController : MonoBehaviour
 
     private void WaterMovement()
     {
+        WaterMovement(-1f, 0f);
+    }
+
+    // t: interpolation factor (0-1), targetXVel: target horizontal velocity
+    private void WaterMovement(float t, float targetXVel)
+    {
         // Water movement: dampen horizontal, slow descent, allow upward movement
         float moveInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
@@ -241,6 +254,12 @@ public class PlayerController : MonoBehaviour
         // Horizontal movement dampened
         float waterMoveSpeed = moveSpeed * 0.5f;
         float xVel = moveInput * waterMoveSpeed;
+
+        // Interpolate x velocity if t >= 0 (used during knockback recovery)
+        if (t >= 0f && t <= 1f)
+        {
+            xVel = Mathf.Lerp(rb.linearVelocity.x, targetXVel * 0.5f, t);
+        }
 
         // Vertical movement: holding up moves player upwards
         float yVel = rb.linearVelocity.y;
