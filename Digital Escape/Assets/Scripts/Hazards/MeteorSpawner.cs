@@ -55,7 +55,7 @@ public class MeteorSpawner : MonoBehaviour
 #if UNITY_EDITOR
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.cyan;
+        Gizmos.color = Color.orange;
         Vector3 center = transform.position;
         Vector3 left = center + Vector3.left * (horizontalSpawnRange / 2f);
         Vector3 right = center + Vector3.right * (horizontalSpawnRange / 2f);
