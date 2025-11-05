@@ -193,7 +193,7 @@ public class PlayerController : MonoBehaviour
             // Movement logic
             if (isInWater)
             {
-                WaterMovement();
+                WaterMovement(-1f, 0f);
             }
             else
             {
@@ -249,11 +249,6 @@ public class PlayerController : MonoBehaviour
         return false;
     }
 
-    private void WaterMovement()
-    {
-        WaterMovement(-1f, 0f);
-    }
-
     // t: interpolation factor (0-1), targetXVel: target horizontal velocity
     private void WaterMovement(float t, float targetXVel)
     {
@@ -273,19 +268,30 @@ public class PlayerController : MonoBehaviour
 
         // Vertical movement: holding up moves player upwards
         float yVel = rb.linearVelocity.y;
-        if (verticalInput > 0f)
+        if (currentPowerup == PowerupType.Heavy)
         {
-            yVel = Mathf.Lerp(yVel, moveSpeed * 0.5f, 0.1f); // swim up
+            // Prevent upward movement in water when Heavy powerup is active
+            if (yVel < 0)
+            {
+                yVel = Mathf.Lerp(yVel, -moveSpeed * 0.2f, 0.1f); // slow descent
+            }
         }
-        else if (yVel < 0)
+        else
         {
-            yVel = Mathf.Lerp(yVel, -moveSpeed * 0.2f, 0.1f); // slow descent
+            if (verticalInput > 0f)
+            {
+                yVel = Mathf.Lerp(yVel, moveSpeed * 0.5f, 0.1f); // swim up
+            }
+            else if (yVel < 0)
+            {
+                yVel = Mathf.Lerp(yVel, -moveSpeed * 0.2f, 0.1f); // slow descent
+            }
         }
 
         rb.linearVelocity = new Vector2(xVel, yVel);
     }
 
-        private void UpdateJumpForce()
+    private void UpdateJumpForce()
     {
         if (currentPowerup == PowerupType.Heavy)
         {
@@ -314,6 +320,9 @@ public class PlayerController : MonoBehaviour
                 rb.gravityScale = heavySneakGravityScale;
                 audioSource.PlayOneShot(sneakSound);
                 heavySneakActive = true;
+
+                // Drop through platform
+                StartCoroutine(DropThroughPlatform());
             }
             else if (!isSneaking && heavySneakActive)
             {
