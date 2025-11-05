@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour
     private float previousVerticalVelocity;
 
     private MovingPlatform currentPlatform;
+    private Elevator currentElevator;
 
     [Header("Powerup")]
     [SerializeField] private PowerupType currentPowerup = PowerupType.None;
@@ -425,7 +426,14 @@ public class PlayerController : MonoBehaviour
     // FixedUpdate
     void FixedUpdate()
     {
-        MovingPlatformVelocityAdjustment();
+        if (currentPlatform != null)
+        {
+            MovingPlatformVelocityAdjustment();
+        }
+        if (currentElevator != null)
+        {
+            ElevatorVelocityAdjustment();
+        }
     }
 
     private void MovingPlatformVelocityAdjustment()
@@ -435,6 +443,7 @@ public class PlayerController : MonoBehaviour
         {
             // Only apply horizontal platform velocity always
             Vector2 platformVel = currentPlatform.platformVelocity;
+            Debug.Log($"[PlayerController] Platform velocity: {platformVel}");
             rb.linearVelocity += new Vector2(platformVel.x, 0f);
 
             // Only apply vertical platform velocity if the player is grounded and not moving upwards (not jumping)
@@ -446,6 +455,24 @@ public class PlayerController : MonoBehaviour
 
         // Reset for next frame
         currentPlatform = null;
+    }
+    
+    private void ElevatorVelocityAdjustment()
+    {
+        // Elevator velocity adjustment
+        if (currentElevator != null)
+        {
+            Vector2 elevatorVel = currentElevator.elevatorVelocity;
+            Debug.Log($"[PlayerController] Elevator velocity: {elevatorVel}, Elevator: {currentElevator.name}");
+            rb.linearVelocity += new Vector2(elevatorVel.x, 0f);
+            if (isGrounded && rb.linearVelocity.y <= 0f)
+            {
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y + elevatorVel.y);
+            }
+        }
+
+        // Reset for next frame
+        currentElevator = null;
     }
 
     // OnTriggerEnter2D
@@ -542,6 +569,10 @@ public class PlayerController : MonoBehaviour
         {
             MovingPlatformCollision(collision);
         }
+        else if (collision.collider.CompareTag("ElevatorFloor"))
+        {
+            ElevatorCollision(collision);
+        }
     }
 
     private void MovingPlatformCollision(Collision2D collision)
@@ -558,6 +589,30 @@ public class PlayerController : MonoBehaviour
                     break;
                 }
             }
+        }
+    }
+
+    private void ElevatorCollision(Collision2D collision)
+    {
+        var elevator = collision.collider.GetComponentInParent<Elevator>();
+        // Find the parent Elevator component (ElevatorFloor is a child object)
+        var parentElevator = collision.collider.transform.parent;
+        if (parentElevator != null)
+        {
+            Elevator parentElevatorComponent = parentElevator.GetComponent<Elevator>();
+            if (parentElevatorComponent != null)
+            {
+                Debug.Log($"[PlayerController] Setting currentElevator to {parentElevatorComponent.name} (velocity: {parentElevatorComponent.elevatorVelocity})");
+                currentElevator = parentElevatorComponent;
+            }
+            else
+            {
+                Debug.LogWarning($"[PlayerController] Parent object {parentElevator.name} does not have Elevator component.");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[PlayerController] ElevatorFloor has no parent transform.");
         }
     }
 

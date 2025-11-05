@@ -344,11 +344,14 @@ MonoBehaviour:
   waterExitBoost: 10
   maxHealth: 3
   currentHealth: 0
+  currentPowerup: 0
+  heavyJumpForceMultiplier: 0.8
+  heavySneakGravityScale: 20
   groundCheck: {fileID: 56741381641411989}
   groundCheckRadius: 0.3
   groundLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 4224
   oneWayPlatformLayer:
     serializedVersion: 2
     m_Bits: 512

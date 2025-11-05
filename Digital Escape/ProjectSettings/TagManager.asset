@@ -11,6 +11,8 @@ TagManager:
   - Hazard
   - MovingPlatform
   - ExplosiveHazard
+  - HeavyBox
+  - ElevatorFloor
   layers:
   - Default
   - TransparentFX
@@ -24,7 +26,7 @@ TagManager:
   - OneWayPlatform
   - Interactable
   - Elevator
-  - 
+  - ElevatorGround
   - 
   - 
   - 

@@ -40,6 +40,7 @@ public class Elevator : MonoBehaviour, IActivatable
     private Rigidbody2D rb;
     private BoxCollider2D[] borderColliders = new BoxCollider2D[4]; // left, right, top, bottom
     private BoxCollider2D elevatorTrigger;
+    private GameObject elevatorGroundDetector; // Reference to the child object
 
     // Start
     void Start()
@@ -77,6 +78,18 @@ public class Elevator : MonoBehaviour, IActivatable
         if (worldTrackPoints.Count > 0)
             transform.position = worldTrackPoints[0];
         previousPosition = rb.position;
+
+        // Find the child GameObject named "elevatorGroundDetector"
+        Transform detectorTransform = transform.Find("elevatorGroundDetector");
+        if (detectorTransform != null)
+        {
+            elevatorGroundDetector = detectorTransform.gameObject;
+            elevatorGroundDetector.SetActive(true);
+        }
+        else
+        {
+            Debug.LogWarning("Elevator: Child GameObject 'elevatorGroundDetector' not found.");
+        }
     }
 
     // MoveRoutine
@@ -111,6 +124,11 @@ public class Elevator : MonoBehaviour, IActivatable
         }
         Vector2 target = worldTrackPoints[currentPointIndex];
         moveTarget = target;
+
+        // Enable elevatorGroundDetector while moving
+        if (elevatorGroundDetector != null)
+            elevatorGroundDetector.SetActive(true);
+
         while (Vector2.Distance(transform.position, target) > 0.05f)
         {
             isMoving = true;
@@ -120,6 +138,11 @@ public class Elevator : MonoBehaviour, IActivatable
         rb.MovePosition(target);
         transform.position = target;
         isMoving = false;
+
+        // Disable elevatorGroundDetector after moving
+        if (elevatorGroundDetector != null)
+            elevatorGroundDetector.SetActive(false);
+
         // Disable border colliders
         foreach (var c in borderColliders)
             if (c != null) c.enabled = false;
