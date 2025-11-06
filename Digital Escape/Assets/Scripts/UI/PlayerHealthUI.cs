@@ -31,16 +31,20 @@ public class PlayerHealthUI : MonoBehaviour
         if (player == null || healthBars == null || healthBars.Length == 0)
             return;
 
-    // Position health bar above player in world space
-    transform.position = player.position + offset;
-    // Optional: make the health bar always face the camera
-    transform.LookAt(Camera.main.transform);
+        // Position health bar above player in world space
+        transform.position = player.position + offset;
+        transform.LookAt(Camera.main.transform);
 
         // Get health from PlayerController
         int health = 3;
         var pc = player.GetComponent<PlayerController>();
         if (pc != null)
-            health = (int)pc.currentHealth;
+        {
+            if (pc.isClone && pc.cloneOwnerInstance != null)
+                health = (int)pc.cloneOwnerInstance.currentHealth;
+            else
+                health = (int)pc.currentHealth;
+        }
 
         // Update health bar visibility
         for (int i = 0; i < healthBars.Length; i++)

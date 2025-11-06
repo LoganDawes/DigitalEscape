@@ -35,12 +35,14 @@ public class Elevator : MonoBehaviour, IActivatable
     private int currentPointIndex = 0;
     private Vector2 previousPosition;
     private bool playerInRange = false;
+    private bool cloneInRange = false;
 
     // Components
     private Rigidbody2D rb;
     private BoxCollider2D[] borderColliders = new BoxCollider2D[4]; // left, right, top, bottom
     private BoxCollider2D elevatorTrigger;
-    private GameObject elevatorGroundDetector; // Reference to the child object
+    private GameObject elevatorGroundDetector;
+    private GameObject activatingPlayer;
 
     // Start
     void Start()
@@ -100,28 +102,25 @@ public class Elevator : MonoBehaviour, IActivatable
         // Enable border colliders
         foreach (var c in borderColliders)
             if (c != null) c.enabled = true;
-        
-        // Ignore collisions with Ground and OneWayPlatform layers for all players inside elevator
-        var players = Object.FindObjectsByType<GameObject>(FindObjectsSortMode.None);
-        foreach (var player in players)
+
+        // Only affect the activating player
+        if (activatingPlayer != null)
         {
-            if (player.CompareTag("Player"))
+            activatingPlayer.transform.SetParent(transform);
+            var playerColliders = activatingPlayer.GetComponents<BoxCollider2D>();
+            var allColliders = Object.FindObjectsByType<Collider2D>(FindObjectsSortMode.None);
+            foreach (var pc in playerColliders)
             {
-                player.transform.SetParent(transform);
-                var playerColliders = player.GetComponents<BoxCollider2D>();
-                var allColliders = Object.FindObjectsByType<Collider2D>(FindObjectsSortMode.None);
-                foreach (var pc in playerColliders)
+                foreach (var col in allColliders)
                 {
-                    foreach (var col in allColliders)
+                    if (col.gameObject.layer == groundLayer || col.gameObject.layer == oneWayPlatformLayer)
                     {
-                        if (col.gameObject.layer == groundLayer || col.gameObject.layer == oneWayPlatformLayer)
-                        {
-                            Physics2D.IgnoreCollision(pc, col, true);
-                        }
+                        Physics2D.IgnoreCollision(pc, col, true);
                     }
                 }
             }
         }
+
         Vector2 target = worldTrackPoints[currentPointIndex];
         moveTarget = target;
 
@@ -146,26 +145,24 @@ public class Elevator : MonoBehaviour, IActivatable
         // Disable border colliders
         foreach (var c in borderColliders)
             if (c != null) c.enabled = false;
-        
-        // Restore collisions with Ground and OneWayPlatform layers for all players
-        foreach (var player in players)
+
+        // Restore collisions for the activating player only
+        if (activatingPlayer != null)
         {
-            if (player.CompareTag("Player"))
+            activatingPlayer.transform.SetParent(null);
+            var playerColliders = activatingPlayer.GetComponents<BoxCollider2D>();
+            var allColliders = Object.FindObjectsByType<Collider2D>(FindObjectsSortMode.None);
+            foreach (var pc in playerColliders)
             {
-                player.transform.SetParent(null);
-                var playerColliders = player.GetComponents<BoxCollider2D>();
-                var allColliders = Object.FindObjectsByType<Collider2D>(FindObjectsSortMode.None);
-                foreach (var pc in playerColliders)
+                foreach (var col in allColliders)
                 {
-                    foreach (var col in allColliders)
+                    if (col.gameObject.layer == groundLayer || col.gameObject.layer == oneWayPlatformLayer)
                     {
-                        if (col.gameObject.layer == groundLayer || col.gameObject.layer == oneWayPlatformLayer)
-                        {
-                            Physics2D.IgnoreCollision(pc, col, false);
-                        }
+                        Physics2D.IgnoreCollision(pc, col, false);
                     }
                 }
             }
+            activatingPlayer = null; // Clear reference after move
         }
     }
 
@@ -174,6 +171,11 @@ public class Elevator : MonoBehaviour, IActivatable
     {
         // Player interaction with E
         if (playerInRange && !isMoving && Input.GetKeyDown(KeyCode.E))
+        {
+            onActivated();
+        }
+        // Clone interaction with F
+        if (cloneInRange && !isMoving && Input.GetKeyDown(KeyCode.F))
         {
             onActivated();
         }
@@ -199,7 +201,25 @@ public class Elevator : MonoBehaviour, IActivatable
     {
         if (isMoving || worldTrackPoints.Count < 2)
             return;
-        // Move to next track point
+
+        // Find the activating player (in range)
+        GameObject playerToActivate = null;
+        var players = Object.FindObjectsByType<GameObject>(FindObjectsSortMode.None);
+        foreach (var player in players)
+        {
+            if (player.CompareTag("Player"))
+            {
+                var pc = player.GetComponent<PlayerController>();
+                if ((playerInRange && pc != null && !pc.isClone) ||
+                    (cloneInRange && pc != null && pc.isClone))
+                {
+                    playerToActivate = player;
+                    break;
+                }
+            }
+        }
+        activatingPlayer = playerToActivate;
+
         currentPointIndex = (currentPointIndex + 1) % worldTrackPoints.Count;
         StartCoroutine(MoveRoutine());
     }
@@ -227,7 +247,15 @@ public class Elevator : MonoBehaviour, IActivatable
     {
         if (other.CompareTag("Player"))
         {
-            playerInRange = true;
+            var pc = other.GetComponent<PlayerController>();
+            if (pc != null && pc.isClone)
+            {
+                cloneInRange = true;
+            }
+            else
+            {
+                playerInRange = true;
+            }
         }
     }
 
@@ -236,7 +264,15 @@ public class Elevator : MonoBehaviour, IActivatable
     {
         if (other.CompareTag("Player"))
         {
-            playerInRange = false;
+            var pc = other.GetComponent<PlayerController>();
+            if (pc != null && pc.isClone)
+            {
+                cloneInRange = false;
+            }
+            else
+            {
+                playerInRange = false;
+            }
         }
     }
 

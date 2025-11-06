@@ -346,7 +346,11 @@ MonoBehaviour:
   currentHealth: 0
   currentPowerup: 0
   heavyJumpForceMultiplier: 0.8
-  heavySneakGravityScale: 20
+  heavySneakGravityScale: 40
+  shrinkScale: 0.5
+  shrinkColliderScale: 0.95
+  shrinkJumpForceMultiplier: 0.7
+  clonePrefab: {fileID: 3768252655199344625}
   groundCheck: {fileID: 56741381641411989}
   groundCheckRadius: 0.3
   groundLayer:
@@ -364,6 +368,10 @@ MonoBehaviour:
   landSound: {fileID: 8300000, guid: 23d4b315ae0467745bfa972388c22dca, type: 3}
   sneakSound: {fileID: 8300000, guid: 5176b1c39c3ca9641a627df2a54c23c4, type: 3}
   unsneakSound: {fileID: 8300000, guid: d3ec554afbf14574184f877eb9cd68bc, type: 3}
+  shrinkPhantomCount: 3
+  shrinkPhantomDuration: 0.3
+  shrinkPhantomInterval: 0.05
+  shrinkPhantomColor: {r: 1, g: 1, b: 1, a: 0.5}
 --- !u!50 &331866359891662756
 Rigidbody2D:
   serializedVersion: 5

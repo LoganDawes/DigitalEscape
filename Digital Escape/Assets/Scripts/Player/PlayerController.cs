@@ -22,19 +22,26 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float jumpForce = 15f;
     [SerializeField] private float dropTime = 0.5f;
     [SerializeField] private float waterExitBoost = 10f;
+
+    [Header("Health Settings")]
     [SerializeField] private float maxHealth = 3;
     public float currentHealth;
-    private float lastWaterY;
+    
+    // Player state
     private bool isGrounded;
     private bool wasGrounded;
     private bool isSneaking;
     private bool wasSneaking;
+    private bool isInWater = false;
+    private float lastWaterY;
+
+    // Original stats
     private Vector3 originalScale;
     private float originalJumpForce;
     private float originalGravityScale;
-    private bool isInWater = false;
     private float previousVerticalVelocity;
 
+    // Platform velocity interaction
     private MovingPlatform currentPlatform;
     private Elevator currentElevator;
 
@@ -43,10 +50,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float heavyJumpForceMultiplier = 0.8f;
     [SerializeField] private float heavySneakGravityScale = 40f;
     [SerializeField] private float shrinkScale = 0.5f;
-    [SerializeField] private float shrinkColliderScale = 0.7f;
+    [SerializeField] private float shrinkColliderScale = 0.95f;
     [SerializeField] private float shrinkJumpForceMultiplier = 0.7f;
+    [SerializeField] private GameObject clonePrefab;
     private bool heavySneakActive = false;
     private bool isShrunk = false;
+    public bool isClone = false;
+    public bool hasClone = false;
+    [HideInInspector] public GameObject cloneInstance;
+    [HideInInspector] public PlayerController cloneOwnerInstance;
 
     [Header("Ground Check")]
     [SerializeField] private Transform groundCheck;
@@ -87,7 +99,7 @@ public class PlayerController : MonoBehaviour
     private BoxCollider2D sneakingCollider;
     private SpriteRenderer spriteRenderer;
     private AudioSource audioSource;
-
+    
     // Start
     void Start()
     {
@@ -186,7 +198,7 @@ public class PlayerController : MonoBehaviour
         // Smooth recovery after knockback
         if (knockbackRecoveryTimer > 0f)
         {
-            float moveInput = Input.GetAxis("Horizontal");
+            float moveInput = isClone ? Input.GetAxisRaw("HorizontalClone") : Input.GetAxis("Horizontal");
             float targetXVel = moveInput * moveSpeed;
             float t = 1f - (knockbackRecoveryTimer / knockbackRecoveryDuration);
             if (isInWater)
@@ -210,14 +222,15 @@ public class PlayerController : MonoBehaviour
             else
             {
                 // Normal movement
-                float moveInput = Input.GetAxis("Horizontal");
+                float moveInput = isClone ? Input.GetAxisRaw("HorizontalClone") : Input.GetAxis("Horizontal");
                 rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
             }
         }
         
         // Jumping
         UpdateJumpForce();
-        if (isGrounded && (Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.W)))
+        bool jumpPressed = isClone ? Input.GetKeyDown(KeyCode.UpArrow) : (Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.W));
+        if (isGrounded && jumpPressed)
         {
             audioSource.PlayOneShot(jumpSound);
             rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
@@ -229,11 +242,11 @@ public class PlayerController : MonoBehaviour
         // Store previous vertical velocity for landing detection
         previousVerticalVelocity = rb.linearVelocity.y;
 
-            // Powerup activation on E press
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                PowerupActivate();
-            }
+        // Powerup activation on Z press
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            PowerupActivate();
+        }
     }
 
     private void LandingDetection()
@@ -332,7 +345,7 @@ public class PlayerController : MonoBehaviour
     
     private void SneakingDetection()
     {
-        isSneaking = Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.LeftShift);
+        isSneaking = isClone ? Input.GetKey(KeyCode.DownArrow) : (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.LeftShift));
 
         if (currentPowerup == PowerupType.Heavy)
         {
@@ -506,6 +519,45 @@ public class PlayerController : MonoBehaviour
                 isShrunk = false;
             }
         }
+        else if (currentPowerup == PowerupType.Clone && !isClone)
+        {
+            if (!hasClone)
+            {
+                // Instantiate clone at current position
+                if (clonePrefab != null)
+                {
+                    cloneInstance = Instantiate(clonePrefab, transform.position, transform.rotation);
+                    PlayerController cloneController = cloneInstance.GetComponent<PlayerController>();
+                    if (cloneController != null)
+                    {
+                        cloneController.isClone = true;
+                        cloneController.currentPowerup = PowerupType.None; // Clone starts with no powerup
+                        cloneController.cloneOwnerInstance = this; // Set owner reference on clone
+                    }
+                    // Set clone layer to "PlayerClone"
+                    int cloneLayer = LayerMask.NameToLayer("PlayerClone");
+                    if (cloneLayer >= 0)
+                    {
+                        cloneInstance.layer = cloneLayer;
+                        foreach (Transform child in cloneInstance.transform)
+                            child.gameObject.layer = cloneLayer;
+                    }
+                    hasClone = true;
+                    cloneOwnerInstance = this; // Set owner reference on owner
+                }
+            }
+            else
+            {
+                // Destroy the clone if it exists
+                if (cloneInstance != null)
+                {
+                    Destroy(cloneInstance);
+                    cloneInstance = null;
+                }
+                hasClone = false;
+                cloneOwnerInstance = null; // Clear owner reference
+            }
+        }
     }
 
     private IEnumerator ShrinkPhantomEffect()
@@ -638,7 +690,14 @@ public class PlayerController : MonoBehaviour
     private void HazardCollision(Collision2D hazard, float magnitude)
     {
         // Lose one health
-        currentHealth = Mathf.Max(0, currentHealth - 1);
+        if (isClone && cloneOwnerInstance != null)
+        {
+            cloneOwnerInstance.currentHealth = Mathf.Max(0, cloneOwnerInstance.currentHealth - 1);
+        }
+        else
+        {
+            currentHealth = Mathf.Max(0, currentHealth - 1);
+        }
 
         // Determine knockback direction based on contact normal
         Vector2 knockbackDir = Vector2.zero;

@@ -11,12 +11,18 @@ public class Button : ButtonBase
 {
     // Variables
     private bool playerInRange = false;
+    private bool cloneInRange = false;
 
     // Update
     protected virtual void Update()
     {
         // Player interaction with E
         if (playerInRange && Input.GetKeyDown(KeyCode.E))
+        {
+            OnPressed();
+        }
+        // Clone interaction with F
+        if (cloneInRange && Input.GetKeyDown(KeyCode.F))
         {
             OnPressed();
         }
@@ -27,7 +33,15 @@ public class Button : ButtonBase
     {
         if (other.CompareTag("Player"))
         {
-            playerInRange = true;
+            var playerController = other.GetComponent<PlayerController>();
+            if (playerController != null && !playerController.isClone)
+            {
+                playerInRange = true;
+            }
+            else
+            {
+                cloneInRange = true;
+            }
         }
     }
 
@@ -36,7 +50,15 @@ public class Button : ButtonBase
     {
         if (other.CompareTag("Player"))
         {
-            playerInRange = false;
+            var playerController = other.GetComponent<PlayerController>();
+            if (playerController != null && !playerController.isClone)
+            {
+                playerInRange = false;
+            }
+            else
+            {
+                cloneInRange = false;
+            }
         }
     }
 }
