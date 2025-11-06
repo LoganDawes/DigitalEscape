@@ -19,9 +19,9 @@ public class PlayerController : MonoBehaviour
     // Variables
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 10f;
-    [SerializeField] private float jumpForce = 10f;
+    [SerializeField] private float jumpForce = 15f;
     [SerializeField] private float dropTime = 0.5f;
-    [SerializeField] private float waterExitBoost = 12f;
+    [SerializeField] private float waterExitBoost = 10f;
     [SerializeField] private float maxHealth = 3;
     public float currentHealth;
     private float lastWaterY;
@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
     private bool wasGrounded;
     private bool isSneaking;
     private bool wasSneaking;
+    private Vector3 originalScale;
     private float originalJumpForce;
     private float originalGravityScale;
     private bool isInWater = false;
@@ -40,19 +41,23 @@ public class PlayerController : MonoBehaviour
     [Header("Powerup")]
     [SerializeField] private PowerupType currentPowerup = PowerupType.None;
     [SerializeField] private float heavyJumpForceMultiplier = 0.8f;
-    [SerializeField] private float heavySneakGravityScale = 20f;
+    [SerializeField] private float heavySneakGravityScale = 40f;
+    [SerializeField] private float shrinkScale = 0.5f;
+    [SerializeField] private float shrinkColliderScale = 0.7f;
+    [SerializeField] private float shrinkJumpForceMultiplier = 0.7f;
     private bool heavySneakActive = false;
+    private bool isShrunk = false;
 
     [Header("Ground Check")]
     [SerializeField] private Transform groundCheck;
-    [SerializeField] private float groundCheckRadius = 0.1f;
+    [SerializeField] private float groundCheckRadius = 0.3f;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask oneWayPlatformLayer;
     private LayerMask combinedGroundLayer;
 
     [Header("Knockback Settings")]
-    [SerializeField] private float knockbackForce = 10f;
-    [SerializeField] private float knockbackDuration = 0.3f;
+    [SerializeField] private float knockbackForce = 15f;
+    [SerializeField] private float knockbackDuration = 0.2f;
     private bool isKnockbacked = false;
     private float knockbackTimer = 0f;
 
@@ -87,7 +92,9 @@ public class PlayerController : MonoBehaviour
     private void Initialize()
     {
         // Initialize variables
+        originalScale = transform.localScale;
         originalJumpForce = jumpForce;
+        originalGravityScale = GetComponent<Rigidbody2D>().gravityScale;
         currentHealth = maxHealth;
 
         // Initialize components
@@ -107,7 +114,6 @@ public class PlayerController : MonoBehaviour
             defaultCollider.enabled = true;
             sneakingCollider.enabled = false;
         }
-        originalGravityScale = GetComponent<Rigidbody2D>().gravityScale;
     }
 
     private void ComponentChecks()
@@ -216,6 +222,12 @@ public class PlayerController : MonoBehaviour
         
         // Store previous vertical velocity for landing detection
         previousVerticalVelocity = rb.linearVelocity.y;
+
+            // Powerup activation on E press
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                PowerupActivate();
+            }
     }
 
     private void LandingDetection()
@@ -297,13 +309,18 @@ public class PlayerController : MonoBehaviour
         {
             jumpForce = originalJumpForce * heavyJumpForceMultiplier;
         }
-        else if (isSneaking)
-        {
-            jumpForce = originalJumpForce / 2f;
-        }
         else
         {
-            jumpForce = originalJumpForce;
+            float scale = 1f;
+            if (isShrunk)
+            {
+                scale *= shrinkJumpForceMultiplier;
+            }
+            if (isSneaking)
+            {
+                scale *= 0.5f;
+            }
+            jumpForce = originalJumpForce * scale;
         }
     }
     
@@ -429,6 +446,56 @@ public class PlayerController : MonoBehaviour
             // Re-enable collision after delay
             Physics2D.IgnoreCollision(defaultCollider, platform, false);
             Physics2D.IgnoreCollision(sneakingCollider, platform, false);
+        }
+    }
+
+    private void PowerupActivate()
+    {
+        if (currentPowerup == PowerupType.Shrink)
+        {
+            if (!isShrunk)
+            {
+                // Shrink player from bottom
+                float oldHeight = defaultCollider.size.y * transform.localScale.y;
+                transform.localScale = originalScale * shrinkScale;
+                defaultCollider.size *= shrinkColliderScale;
+                sneakingCollider.size *= shrinkColliderScale;
+                moveSpeed *= shrinkScale;
+                // Adjust position so feet stay in place
+                float newHeight = defaultCollider.size.y * transform.localScale.y;
+                float deltaY = oldHeight - newHeight;
+                transform.position += new Vector3(0f, -deltaY / 2f, 0f);
+                isShrunk = true;
+            }
+            else
+            {
+                // Check if there is enough room to grow above
+                float growHeight = (defaultCollider.size.y / shrinkColliderScale) * originalScale.y;
+                float currentHeight = defaultCollider.size.y * transform.localScale.y;
+                float deltaY = growHeight - currentHeight;
+                Vector2 checkPosition = (Vector2)transform.position + new Vector2(0f, deltaY / 2f);
+                Vector2 checkSize = new Vector2(defaultCollider.size.x / shrinkColliderScale, deltaY);
+                Collider2D hit = Physics2D.OverlapBox(
+                    checkPosition + defaultCollider.offset,
+                    checkSize,
+                    0f,
+                    combinedGroundLayer
+                );
+                if (hit != null)
+                {
+                    Debug.Log("[PlayerController] Not enough room to grow!");
+                    return;
+                }
+
+                // Restore player from bottom
+                transform.localScale = originalScale;
+                defaultCollider.size /= shrinkColliderScale;
+                sneakingCollider.size /= shrinkColliderScale;
+                moveSpeed /= shrinkScale;
+                // Adjust position so feet stay in place
+                transform.position += new Vector3(0f, deltaY / 2f, 0f);
+                isShrunk = false;
+            }
         }
     }
 
