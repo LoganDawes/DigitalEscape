@@ -284,8 +284,18 @@ public class PlayerController : MonoBehaviour
     private void WaterMovement(float t, float targetXVel)
     {
         // Water movement: dampen horizontal, slow descent, allow upward movement
-        float moveInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
+        float moveInput = isClone ? Input.GetAxisRaw("HorizontalClone") : Input.GetAxis("Horizontal");
+        float verticalInput = isClone ? Input.GetAxisRaw("VerticalClone") : Input.GetAxis("Vertical");
+
+        // Swim powerup: full directional movement in water
+        if (currentPowerup == PowerupType.Swim)
+        {
+            float swimSpeed = moveSpeed;
+            float swimXVel = moveInput * swimSpeed;
+            float swimYVel = verticalInput * swimSpeed;
+            rb.linearVelocity = new Vector2(swimXVel, swimYVel);
+            return;
+        }
 
         // Horizontal movement dampened
         float waterMoveSpeed = moveSpeed * 0.5f;
@@ -345,7 +355,24 @@ public class PlayerController : MonoBehaviour
     
     private void SneakingDetection()
     {
-        isSneaking = isClone ? Input.GetKey(KeyCode.DownArrow) : (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.LeftShift));
+        // Prevent sneaking in water with Swim powerup unless already sneaking
+        bool sneakInput = isClone ? Input.GetKey(KeyCode.DownArrow) : (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.LeftShift));
+        if (currentPowerup == PowerupType.Swim && isInWater)
+        {
+            // If already sneaking, allow to remain sneaking until S released
+            if (wasSneaking && sneakInput)
+            {
+                isSneaking = true;
+            }
+            else
+            {
+                isSneaking = false;
+            }
+        }
+        else
+        {
+            isSneaking = sneakInput;
+        }
 
         if (currentPowerup == PowerupType.Heavy)
         {
