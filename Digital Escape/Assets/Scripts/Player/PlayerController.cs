@@ -75,6 +75,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private AudioClip sneakSound;
     [SerializeField] private AudioClip unsneakSound;
 
+    [Header("Shrink Phantom Effect")]
+    [SerializeField] private int shrinkPhantomCount = 3;
+    [SerializeField] private float shrinkPhantomDuration = 0.3f;
+    [SerializeField] private float shrinkPhantomInterval = 0.05f;
+    [SerializeField] private Color shrinkPhantomColor = new Color(1f, 1f, 1f, 0.5f);
+
     // Components
     private Rigidbody2D rb;
     private BoxCollider2D defaultCollider;
@@ -455,6 +461,9 @@ public class PlayerController : MonoBehaviour
         {
             if (!isShrunk)
             {
+                // Shrink phantom effect
+                StartCoroutine(ShrinkPhantomEffect());
+
                 // Shrink player from bottom
                 float oldHeight = defaultCollider.size.y * transform.localScale.y;
                 transform.localScale = originalScale * shrinkScale;
@@ -497,6 +506,43 @@ public class PlayerController : MonoBehaviour
                 isShrunk = false;
             }
         }
+    }
+
+    private IEnumerator ShrinkPhantomEffect()
+    {
+        for (int i = 0; i < shrinkPhantomCount; i++)
+        {
+            SpawnShrinkPhantom();
+            yield return new WaitForSeconds(shrinkPhantomInterval);
+        }
+    }
+
+    private void SpawnShrinkPhantom()
+    {
+        GameObject phantom = new GameObject("ShrinkPhantom");
+        phantom.transform.position = transform.position;
+        phantom.transform.localScale = transform.localScale;
+        var sr = phantom.AddComponent<SpriteRenderer>();
+        sr.sprite = spriteRenderer.sprite;
+        sr.sortingLayerID = spriteRenderer.sortingLayerID;
+        sr.sortingOrder = spriteRenderer.sortingOrder - 1;
+        sr.color = shrinkPhantomColor;
+
+        StartCoroutine(FadeAndDestroyPhantom(sr, shrinkPhantomDuration));
+    }
+
+    private IEnumerator FadeAndDestroyPhantom(SpriteRenderer sr, float duration)
+    {
+        float timer = 0f;
+        Color startColor = sr.color;
+        while (timer < duration)
+        {
+            float t = timer / duration;
+            sr.color = new Color(startColor.r, startColor.g, startColor.b, Mathf.Lerp(startColor.a, 0f, t));
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        Destroy(sr.gameObject);
     }
 
     // FixedUpdate
