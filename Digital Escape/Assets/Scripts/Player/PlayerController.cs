@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float waterExitBoost = 10f;
 
     [Header("Health Settings")]
-    [SerializeField] private float maxHealth = 3;
+    public float maxHealth = 3;
     public float currentHealth;
     
     // Player state
@@ -59,6 +59,7 @@ public class PlayerController : MonoBehaviour
     public bool hasClone = false;
     [HideInInspector] public GameObject cloneInstance;
     [HideInInspector] public PlayerController cloneOwnerInstance;
+    public PowerupType cloneCollectedPowerup = PowerupType.None;
 
     [Header("Ground Check")]
     [SerializeField] private Transform groundCheck;
@@ -238,12 +239,13 @@ public class PlayerController : MonoBehaviour
 
         // Sneaking logic
         SneakingDetection();
-        
+
         // Store previous vertical velocity for landing detection
         previousVerticalVelocity = rb.linearVelocity.y;
 
         // Powerup activation on Z press
-        if (Input.GetKeyDown(KeyCode.Z))
+        bool powerupPressed = isClone ? Input.GetKeyDown(KeyCode.X) : Input.GetKeyDown(KeyCode.Z);
+        if (powerupPressed)
         {
             PowerupActivate();
         }
@@ -560,6 +562,11 @@ public class PlayerController : MonoBehaviour
                         cloneController.isClone = true;
                         cloneController.currentPowerup = PowerupType.None; // Clone starts with no powerup
                         cloneController.cloneOwnerInstance = this; // Set owner reference on clone
+                        // Apply stored powerup to clone if any
+                        if (cloneCollectedPowerup != PowerupType.None)
+                        {
+                            cloneController.SetPowerup(cloneCollectedPowerup);
+                        }
                     }
                     // Set clone layer to "PlayerClone"
                     int cloneLayer = LayerMask.NameToLayer("PlayerClone");
@@ -824,27 +831,44 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public bool SetPowerup(PowerupType type)
+    public void SetPowerup(PowerupType type)
     {
-        if (currentPowerup == PowerupType.None && type != PowerupType.None)
+        // Prevent clone from acquiring Clone powerup
+        if (isClone && type == PowerupType.Clone)
         {
-            currentPowerup = type;
-            // Apply Heavy powerup
-            if (type == PowerupType.Heavy)
-            {
-                spriteRenderer.sprite = defaultSprite;
-                defaultCollider.enabled = true;
-                sneakingCollider.enabled = false;
-            }
-            return true;
+            return;
         }
-        else if (currentPowerup != PowerupType.None && type == PowerupType.None)
+
+        // If overriding Clone powerup and a clone exists, destroy the clone
+        if (currentPowerup == PowerupType.Clone && type != PowerupType.Clone && cloneInstance != null)
         {
-            // Restore normal jump force and gravity
+            Destroy(cloneInstance);
+            cloneInstance = null;
+            cloneCollectedPowerup = PowerupType.None;
+            hasClone = false;
+        }
+
+        // Set powerup type
+        currentPowerup = type;
+
+        // Apply powerup effects
+        if (type == PowerupType.Heavy)
+        {
+            spriteRenderer.sprite = defaultSprite;
+            defaultCollider.enabled = true;
+            sneakingCollider.enabled = false;
+        }
+        if (type == PowerupType.None)
+        {
             rb.gravityScale = originalGravityScale;
             heavySneakActive = false;
         }
-        return false;
+        
+        // If this is a clone, also overwrite owner's cloneCollectedPowerup
+        if (isClone && cloneOwnerInstance != null)
+        {
+            cloneOwnerInstance.cloneCollectedPowerup = type;
+        }
     }
 
     public PowerupType GetPowerup()

@@ -6,7 +6,8 @@ public enum PowerupType
     Heavy,
     Shrink,
     Clone,
-    Swim
+    Swim,
+    Health
 }
 
 /*
@@ -45,8 +46,15 @@ public class Powerup : MonoBehaviour
             var player = other.GetComponent<PlayerController>();
             if (player != null)
             {
-                if (player.SetPowerup(type))
+                if (type == PowerupType.Health)
                 {
+                    // Heal player by 1, do not overwrite powerup type
+                    player.currentHealth = Mathf.Min(player.currentHealth + 1, player.maxHealth);
+                    Destroy(gameObject);
+                }
+                else
+                {
+                    player.SetPowerup(type);
                     Destroy(gameObject);
                 }
             }
