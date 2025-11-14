@@ -49,6 +49,11 @@ public class CameraController : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
+            // Register with GameManager
+            if (GameManager.instance != null)
+            {
+                GameManager.instance.RegisterCamera(this);
+            }
         }
         else
         {

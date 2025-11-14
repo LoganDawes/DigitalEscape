@@ -100,12 +100,17 @@ public class PlayerController : MonoBehaviour
     private BoxCollider2D sneakingCollider;
     private SpriteRenderer spriteRenderer;
     private AudioSource audioSource;
-    
+
     // Start
     void Start()
     {
         Initialize();
         ComponentChecks();
+        DontDestroyOnLoad(gameObject);
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.RegisterPlayer(this);
+        }
     }
 
     private void Initialize()

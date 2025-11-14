@@ -13,6 +13,8 @@ TagManager:
   - ExplosiveHazard
   - HeavyBox
   - ElevatorFloor
+  - ExitDoor
+  - EntryDoor
   layers:
   - Default
   - TransparentFX
@@ -61,6 +63,9 @@ TagManager:
     locked: 0
   - name: Foreground
     uniqueID: 2482270565
+    locked: 0
+  - name: UI
+    uniqueID: 1030600743
     locked: 0
   m_RenderingLayers:
   - Default

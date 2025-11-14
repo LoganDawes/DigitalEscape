@@ -62,7 +62,7 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: 1030600743
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &6842750892979228016
@@ -351,6 +351,11 @@ MonoBehaviour:
   shrinkColliderScale: 0.95
   shrinkJumpForceMultiplier: 0.7
   clonePrefab: {fileID: 3768252655199344625}
+  isClone: 0
+  hasClone: 0
+  cloneInstance: {fileID: 0}
+  cloneOwnerInstance: {fileID: 0}
+  cloneCollectedPowerup: 0
   groundCheck: {fileID: 56741381641411989}
   groundCheckRadius: 0.3
   groundLayer:
