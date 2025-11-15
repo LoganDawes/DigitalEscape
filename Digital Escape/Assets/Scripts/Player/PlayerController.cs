@@ -729,14 +729,7 @@ public class PlayerController : MonoBehaviour
     private void HazardCollision(Collision2D hazard, float magnitude)
     {
         // Lose one health
-        if (isClone && cloneOwnerInstance != null)
-        {
-            cloneOwnerInstance.currentHealth = Mathf.Max(0, cloneOwnerInstance.currentHealth - 1);
-        }
-        else
-        {
-            currentHealth = Mathf.Max(0, currentHealth - 1);
-        }
+        DamagePlayer(1.0f);
 
         // Determine knockback direction based on contact normal
         Vector2 knockbackDir = Vector2.zero;
@@ -780,6 +773,18 @@ public class PlayerController : MonoBehaviour
         // Disable movement for knockback duration
         isKnockbacked = true;
         knockbackTimer = knockbackDuration;
+    }
+
+    public void DamagePlayer(float damage)
+    {
+        if (isClone && cloneOwnerInstance != null)
+        {
+            cloneOwnerInstance.currentHealth = Mathf.Max(0, cloneOwnerInstance.currentHealth - damage);
+        }
+        else
+        {
+            currentHealth = Mathf.Max(0, currentHealth - damage);
+        }
     }
 
     // OnCollisionStay2D

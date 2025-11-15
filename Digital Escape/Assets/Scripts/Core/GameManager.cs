@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 /*
 
@@ -17,6 +18,7 @@ public class GameManager : MonoBehaviour
     // References
     private PlayerController player;
     private CameraController cameraController;
+    private Fade fade;
 
 
     // Awake
@@ -28,7 +30,7 @@ public class GameManager : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(gameObject);
             SceneManager.sceneLoaded += OnSceneLoaded;
-            Debug.Log("[GameManager] Awake: GameManager instance created and set to persist.");
+            fade = Fade.instance;
         }
         else
         {
@@ -43,32 +45,37 @@ public class GameManager : MonoBehaviour
         if (p != null && !p.isClone)
         {
             player = p;
-            Debug.Log($"[GameManager] RegisterPlayer: Player registered ({player?.name})");
         }
     }
     public void RegisterCamera(CameraController cam)
     {
         cameraController = cam;
-        Debug.Log($"[GameManager] RegisterCamera: Camera registered ({cameraController?.name})");
     }
 
     // Called when a new scene is loaded
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log($"[GameManager] OnSceneLoaded: Scene '{scene.name}' loaded.");
+        GameObject entryDoor = FindEntryDoor();
+        EnsurePlayerReference();
+        DestroyPlayerClone();
+        MovePlayerToEntryDoor(entryDoor);
+        RestoreCameraTarget();
+    }
 
-        // Find EntryDoor in the new scene
-        GameObject entryDoor = GameObject.FindGameObjectWithTag("EntryDoor");
-        if (entryDoor != null)
-        {
-            Debug.Log($"[GameManager] EntryDoor found: {entryDoor.name} at {entryDoor.transform.position}");
-        }
-        else
+    // Find EntryDoor in the scene
+    private GameObject FindEntryDoor()
+    {
+        var entryDoor = GameObject.FindGameObjectWithTag("EntryDoor");
+        if (entryDoor == null)
         {
             Debug.LogWarning("[GameManager] EntryDoor not found in scene.");
         }
+        return entryDoor;
+    }
 
-        // Ensure player reference is set from DontDestroyOnLoad
+    // Ensure player reference is set
+    private void EnsurePlayerReference()
+    {
         if (player == null)
         {
             var foundPlayers = Object.FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
@@ -77,7 +84,6 @@ public class GameManager : MonoBehaviour
                 if (!foundPlayer.isClone)
                 {
                     player = foundPlayer;
-                    Debug.Log($"[GameManager] Found and assigned player: {player.name}");
                     break;
                 }
             }
@@ -86,8 +92,11 @@ public class GameManager : MonoBehaviour
                 Debug.LogWarning("[GameManager] No non-clone PlayerController found in scene.");
             }
         }
+    }
 
-        // Destroy clone if active
+    // Destroy clone if active
+    private void DestroyPlayerClone()
+    {
         if (player != null && player.cloneInstance != null)
         {
             Object.Destroy(player.cloneInstance);
@@ -95,14 +104,15 @@ public class GameManager : MonoBehaviour
             player.hasClone = false;
             player.cloneOwnerInstance = null;
             player.cloneCollectedPowerup = PowerupType.None;
-            Debug.Log("[GameManager] Clone destroyed on scene load.");
         }
+    }
 
-        // Move player to EntryDoor if possible
+    // Move player to EntryDoor
+    private void MovePlayerToEntryDoor(GameObject entryDoor)
+    {
         if (player != null && entryDoor != null)
         {
             player.transform.position = entryDoor.transform.position;
-            Debug.Log($"[GameManager] Player '{player.name}' moved to EntryDoor position.");
         }
         else if (player == null)
         {
@@ -112,8 +122,11 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogWarning("[GameManager] EntryDoor not found, player not moved.");
         }
+    }
 
-        // Restore camera target to player
+    // Restore camera target to player
+    private void RestoreCameraTarget()
+    {
         if (cameraController == null)
         {
             cameraController = Object.FindFirstObjectByType<CameraController>();
@@ -140,7 +153,29 @@ public class GameManager : MonoBehaviour
     // Scene loading API for Door
     public void LoadScene(string sceneName)
     {
-        Debug.Log($"[GameManager] LoadScene called for scene: {sceneName}");
+        StartCoroutine(TransitionScene(sceneName));
+    }
+
+    private IEnumerator TransitionScene(string sceneName)
+    {
+        if (fade == null)
+        {
+            fade = Fade.instance;
+        }
+        if (fade != null)
+        {
+            yield return fade.FadeIn(1f); // Fade to black
+        }
         SceneManager.LoadScene(sceneName);
+        // Wait for scene to load
+        yield return new WaitForSeconds(0.2f);
+        if (fade == null)
+        {
+            fade = Fade.instance;
+        }
+        if (fade != null)
+        {
+            yield return fade.FadeOut(1f); // Fade out to transparent
+        }
     }
 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 /*
  
@@ -10,18 +11,62 @@ using UnityEngine;
 public class Fade : MonoBehaviour
 {
     // Variables
+    [SerializeField] private UnityEngine.UI.Image fadeImage;
+    public static Fade instance;
 
-    // Components
-
-    // Start
-    void Start()
+    private void Awake()
     {
-
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
-    // Update
-    void Update()
+    void Start()
     {
+        if (fadeImage == null)
+        {
+            fadeImage = GetComponent<UnityEngine.UI.Image>();
+        }
+        SetAlpha(0f); // Start transparent
+    }
 
+    public void SetAlpha(float alpha)
+    {
+        if (fadeImage != null)
+        {
+            var color = fadeImage.color;
+            color.a = alpha;
+            fadeImage.color = color;
+        }
+    }
+
+    public IEnumerator FadeIn(float duration)
+    {
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            SetAlpha(Mathf.Lerp(0f, 1f, elapsed / duration));
+            yield return null;
+        }
+        SetAlpha(1f);
+    }
+
+    public IEnumerator FadeOut(float duration)
+    {
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            SetAlpha(Mathf.Lerp(1f, 0f, elapsed / duration));
+            yield return null;
+        }
+        SetAlpha(0f);
     }
 }

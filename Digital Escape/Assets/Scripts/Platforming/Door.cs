@@ -14,17 +14,12 @@ public class Door : MonoBehaviour
     [SerializeField] private string sceneToLoad;
 
     // Components
+    private Collider2D doorCollider;
 
     // Start
     void Start()
     {
-
-    }
-
-    // Update
-    void Update()
-    {
-
+        doorCollider = GetComponent<Collider2D>();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -36,6 +31,10 @@ public class Door : MonoBehaviour
             {
                 if (GameManager.instance != null)
                 {
+                    // Disable trigger
+                    doorCollider.enabled = false;
+
+                    // Use GameManager to load the scene
                     GameManager.instance.LoadScene(sceneToLoad);
                 }
                 else
