@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     private PlayerController player;
     private CameraController cameraController;
     private Fade fade;
+    private LevelTitle levelTitle;
 
 
     // Awake
@@ -31,6 +32,7 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
             SceneManager.sceneLoaded += OnSceneLoaded;
             fade = Fade.instance;
+            levelTitle = LevelTitle.instance;
         }
         else
         {
@@ -60,6 +62,16 @@ public class GameManager : MonoBehaviour
         DestroyPlayerClone();
         MovePlayerToEntryDoor(entryDoor);
         RestoreCameraTarget();
+
+        // Show LevelTitle on scene load
+        if (levelTitle == null)
+        {
+            levelTitle = LevelTitle.instance;
+        }
+        if (levelTitle != null)
+        {
+            levelTitle.ShowTitle(scene.name); // Show scene name as title
+        }
     }
 
     // Find EntryDoor in the scene
@@ -130,11 +142,7 @@ public class GameManager : MonoBehaviour
         if (cameraController == null)
         {
             cameraController = Object.FindFirstObjectByType<CameraController>();
-            if (cameraController != null)
-            {
-                Debug.Log($"[GameManager] Found and assigned camera: {cameraController.name}");
-            }
-            else
+            if (cameraController == null)
             {
                 Debug.LogWarning("[GameManager] No CameraController found in scene.");
             }
@@ -142,7 +150,6 @@ public class GameManager : MonoBehaviour
         if (cameraController != null && player != null)
         {
             cameraController.SetTarget(player.transform);
-            Debug.Log($"[GameManager] Camera target set to player: {player.name}");
         }
         else
         {
@@ -153,7 +160,16 @@ public class GameManager : MonoBehaviour
     // Scene loading API for Door
     public void LoadScene(string sceneName)
     {
+        LockPlayerControlOnTransition();
         StartCoroutine(TransitionScene(sceneName));
+    }
+
+    private void LockPlayerControlOnTransition()
+    {
+        if (player != null)
+        {
+            player.SetControlLocked(true);
+        }
     }
 
     private IEnumerator TransitionScene(string sceneName)
@@ -175,6 +191,7 @@ public class GameManager : MonoBehaviour
         }
         if (fade != null)
         {
+            player.SetControlLocked(false);
             yield return fade.FadeOut(1f); // Fade out to transparent
         }
     }

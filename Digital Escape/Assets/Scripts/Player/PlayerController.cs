@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float jumpForce = 15f;
     [SerializeField] private float dropTime = 0.5f;
     [SerializeField] private float waterExitBoost = 10f;
+    [SerializeField] private float transitionSlide = 0.95f;
 
     [Header("Health Settings")]
     public float maxHealth = 3;
@@ -100,6 +101,8 @@ public class PlayerController : MonoBehaviour
     private BoxCollider2D sneakingCollider;
     private SpriteRenderer spriteRenderer;
     private AudioSource audioSource;
+    private bool controlLocked = false;
+    private bool wasControlLocked = false;
 
     // Start
     void Start()
@@ -191,6 +194,19 @@ public class PlayerController : MonoBehaviour
     // Update
     void Update()
     {
+        if (controlLocked)
+        {
+            // Smoothly damp velocity (slide effect)
+            rb.linearVelocity = rb.linearVelocity * transitionSlide;
+            wasControlLocked = true;
+            return;
+        }
+        else if (wasControlLocked)
+        {
+            // Reset flag after unlocking
+            wasControlLocked = false;
+        }
+
         // Landing detection logic
         LandingDetection();
 
@@ -884,6 +900,13 @@ public class PlayerController : MonoBehaviour
     public PowerupType GetPowerup()
     {
         return currentPowerup;
+    }
+
+    public void SetControlLocked(bool locked)
+    {
+        controlLocked = locked;
+        if (!locked)
+            wasControlLocked = false;
     }
 }
 
