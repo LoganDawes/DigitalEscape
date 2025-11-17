@@ -16,6 +16,7 @@ public class Fade : MonoBehaviour
 
     private void Awake()
     {
+        gameObject.SetActive(true); // Ensure object is enabled
         if (instance == null)
         {
             instance = this;

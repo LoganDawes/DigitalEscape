@@ -103,6 +103,7 @@ public class PlayerController : MonoBehaviour
     private AudioSource audioSource;
     private bool controlLocked = false;
     private bool wasControlLocked = false;
+    private bool isDead = false;
 
     // Start
     void Start()
@@ -793,13 +794,23 @@ public class PlayerController : MonoBehaviour
 
     public void DamagePlayer(float damage)
     {
+        if (isDead) return;
+
         if (isClone && cloneOwnerInstance != null)
         {
             cloneOwnerInstance.currentHealth = Mathf.Max(0, cloneOwnerInstance.currentHealth - damage);
+            if (cloneOwnerInstance.currentHealth <= 0)
+            {
+                cloneOwnerInstance.HandleDeath();
+            }
         }
         else
         {
             currentHealth = Mathf.Max(0, currentHealth - damage);
+            if (currentHealth <= 0)
+            {
+                HandleDeath();
+            }
         }
     }
 
@@ -855,6 +866,21 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogWarning("[PlayerController] ElevatorFloor has no parent transform.");
         }
+    }
+
+    private void HandleDeath()
+    {
+        if (isDead) return;
+        isDead = true;
+
+        // Fade in GameOverUI
+        GameOverUI gameOverUI = GameOverUI.instance;
+        if (gameOverUI != null)
+        {
+            gameOverUI.FadeIn();
+        }
+
+        Destroy(gameObject);
     }
 
     public void SetPowerup(PowerupType type)

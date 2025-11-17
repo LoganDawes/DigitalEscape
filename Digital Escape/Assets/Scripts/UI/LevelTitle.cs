@@ -19,6 +19,7 @@ public class LevelTitle : MonoBehaviour
     // Awake
     private void Awake()
     {
+        gameObject.SetActive(true); // Ensure object is enabled
         if (instance == null)
         {
             instance = this;
