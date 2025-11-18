@@ -873,6 +873,14 @@ public class PlayerController : MonoBehaviour
         if (isDead) return;
         isDead = true;
 
+        if (cloneInstance != null)
+        {
+            Destroy(cloneInstance);
+            cloneInstance = null;
+            hasClone = false;
+            cloneCollectedPowerup = PowerupType.None;
+        }
+
         // Fade in GameOverUI
         GameOverUI gameOverUI = GameOverUI.instance;
         if (gameOverUI != null)

@@ -34,7 +34,8 @@ public class Fade : MonoBehaviour
         {
             fadeImage = GetComponent<UnityEngine.UI.Image>();
         }
-        SetAlpha(0f); // Start transparent
+        SetAlpha(1f); // Start opaque
+        StartCoroutine(FadeOut(1f));
     }
 
     public void SetAlpha(float alpha)

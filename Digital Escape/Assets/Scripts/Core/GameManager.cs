@@ -57,6 +57,12 @@ public class GameManager : MonoBehaviour
     // Called when a new scene is loaded
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        // Skip player/camera actions if on TitleScreen
+        if (scene.name == "TitleScreen")
+        {
+            return;
+        }
+
         GameObject entryDoor = FindEntryDoor();
         EnsurePlayerReference();
         DestroyPlayerClone();
@@ -70,7 +76,7 @@ public class GameManager : MonoBehaviour
         }
         if (levelTitle != null)
         {
-            levelTitle.ShowTitle(scene.name); // Show scene name as title
+            levelTitle.ShowTitle(scene.name);
         }
     }
 
@@ -115,7 +121,6 @@ public class GameManager : MonoBehaviour
             player.cloneInstance = null;
             player.hasClone = false;
             player.cloneOwnerInstance = null;
-            player.cloneCollectedPowerup = PowerupType.None;
         }
     }
 
