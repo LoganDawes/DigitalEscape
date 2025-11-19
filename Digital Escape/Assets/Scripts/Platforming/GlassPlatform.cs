@@ -12,18 +12,6 @@ public class GlassPlatform : Platform
     // Variables
     [SerializeField] private float breakVelocityThreshold = -30f; // Lowered threshold for better tuning
 
-    // Start
-    void Start()
-    {
-
-    }
-
-    // Update
-    void Update()
-    {
-
-    }
-
     void OnCollisionEnter2D(Collision2D collision)
     {
         // Check if the colliding object is the player

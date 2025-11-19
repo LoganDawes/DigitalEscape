@@ -15,6 +15,7 @@ TagManager:
   - ElevatorFloor
   - ExitDoor
   - EntryDoor
+  - Midpoint
   layers:
   - Default
   - TransparentFX
@@ -30,7 +31,7 @@ TagManager:
   - Elevator
   - ElevatorGround
   - PlayerClone
-  - 
+  - CloneDoor
   - 
   - 
   - 

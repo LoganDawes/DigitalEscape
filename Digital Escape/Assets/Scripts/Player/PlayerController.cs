@@ -49,12 +49,12 @@ public class PlayerController : MonoBehaviour
     [Header("Powerup")]
     [SerializeField] private PowerupType currentPowerup = PowerupType.None;
     [SerializeField] private float heavyJumpForceMultiplier = 0.8f;
-    [SerializeField] private float heavySneakGravityScale = 40f;
+    [SerializeField] private float heavySlamGravityScale = 40f;
     [SerializeField] private float shrinkScale = 0.5f;
     [SerializeField] private float shrinkColliderScale = 0.95f;
     [SerializeField] private float shrinkJumpForceMultiplier = 0.7f;
     [SerializeField] private GameObject clonePrefab;
-    private bool heavySneakActive = false;
+    private bool heavySlamActive = false;
     private bool isShrunk = false;
     public bool isClone = false;
     public bool hasClone = false;
@@ -401,22 +401,22 @@ public class PlayerController : MonoBehaviour
         if (currentPowerup == PowerupType.Heavy)
         {
             // Heavy: Sneaking only affects speed and gravity, not collider/sprite
-            if (isSneaking && !heavySneakActive)
+            if (isSneaking && !heavySlamActive)
             {
                 // Increase gravity while sneaking
-                rb.gravityScale = heavySneakGravityScale;
+                rb.gravityScale = heavySlamGravityScale;
                 audioSource.PlayOneShot(sneakSound);
-                heavySneakActive = true;
+                heavySlamActive = true;
 
                 // Drop through platform
                 StartCoroutine(DropThroughPlatform());
             }
-            else if (!isSneaking && heavySneakActive)
+            else if (!isSneaking && heavySlamActive)
             {
                 // Restore gravity
                 rb.gravityScale = originalGravityScale;
                 audioSource.PlayOneShot(unsneakSound);
-                heavySneakActive = false;
+                heavySlamActive = false;
             }
             wasSneaking = isSneaking;
             return;
@@ -424,10 +424,10 @@ public class PlayerController : MonoBehaviour
         else
         {
             // Restore gravity if not Heavy
-            if (heavySneakActive)
+            if (heavySlamActive)
             {
                 rb.gravityScale = originalGravityScale;
-                heavySneakActive = false;
+                heavySlamActive = false;
             }
         }
 
@@ -748,6 +748,13 @@ public class PlayerController : MonoBehaviour
         // Lose one health
         DamagePlayer(1.0f);
 
+        // End heavy slam if active
+        if (heavySlamActive)
+        {
+            rb.gravityScale = originalGravityScale;
+            heavySlamActive = false;
+        }
+
         // Determine knockback direction based on contact normal
         Vector2 knockbackDir = Vector2.zero;
         if (hazard.contactCount > 0)
@@ -921,7 +928,7 @@ public class PlayerController : MonoBehaviour
         if (type == PowerupType.None)
         {
             rb.gravityScale = originalGravityScale;
-            heavySneakActive = false;
+            heavySlamActive = false;
         }
         
         // If this is a clone, also overwrite owner's cloneCollectedPowerup

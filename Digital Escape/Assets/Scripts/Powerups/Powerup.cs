@@ -20,13 +20,14 @@ public enum PowerupType
 public class Powerup : MonoBehaviour
 {
     // Variables
-    public PowerupType type;
-    public float hoverAmplitude = 0.2f;
-    public float hoverFrequency = 1.5f;
-    public float powerupTimer = 10f;
+    [SerializeField] private PowerupType type;
+    [SerializeField] private float hoverAmplitude = 0.2f;
+    [SerializeField] private float hoverFrequency = 1.5f;
+    [SerializeField] private float powerupTimer = 10f;
     private Vector3 startPos;
     private float timer = 0f;
     private bool isDisabled = false;
+    [SerializeField] private bool canRespawn = true;
 
     // Start
     void Start()
@@ -48,7 +49,10 @@ public class Powerup : MonoBehaviour
             timer += Time.deltaTime;
             if (timer >= powerupTimer)
             {
-                EnablePowerup();
+                if (canRespawn)
+                {
+                    EnablePowerup();
+                }
             }
         }
     }

@@ -93,8 +93,15 @@ public class MovingPlatform : Platform, IActivatable
             rb.MovePosition(target);
             transform.position = target;
 
-            // Wait at the point
-            yield return new WaitForSeconds(waitTime);
+            // Determine if this is a midpoint or a normal trackpoint
+            Transform currentTrackTransform = trackPoints[currentPointIndex];
+            bool isMidpoint = currentTrackTransform != null && currentTrackTransform.CompareTag("Midpoint");
+
+            // Wait only if not a midpoint
+            if (!isMidpoint)
+            {
+                yield return new WaitForSeconds(waitTime);
+            }
 
             // Move to the next point
             currentPointIndex = (currentPointIndex + 1) % worldTrackPoints.Count;
@@ -185,6 +192,13 @@ public class MovingPlatform : Platform, IActivatable
 
                 // Apply position, rotation, and scale
                 Gizmos.matrix = Matrix4x4.TRS(t.position, transform.rotation, transform.lossyScale);
+
+                // Set color based on tag
+                if (t.CompareTag("Midpoint"))
+                    Gizmos.color = new Color(1f, 0.5f, 0f, 1f); // orange
+                else
+                    Gizmos.color = Color.cyan;
+
                 Gizmos.DrawWireCube(offset, size);
 
                 // Restore the matrix

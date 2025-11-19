@@ -97,13 +97,10 @@ public class Elevator : MonoBehaviour, IActivatable
     // MoveRoutine
     IEnumerator MoveRoutine()
     {
-        // Move to next track point only when activated
         isMoving = true;
-        // Enable border colliders
         foreach (var c in borderColliders)
             if (c != null) c.enabled = true;
 
-        // Only affect the activating player
         if (activatingPlayer != null)
         {
             activatingPlayer.transform.SetParent(transform);
@@ -121,48 +118,63 @@ public class Elevator : MonoBehaviour, IActivatable
             }
         }
 
-        Vector2 target = worldTrackPoints[currentPointIndex];
-        moveTarget = target;
-
-        // Enable elevatorGroundDetector while moving
-        if (elevatorGroundDetector != null)
-            elevatorGroundDetector.SetActive(true);
-
-        while (Vector2.Distance(transform.position, target) > 0.05f)
+        // Elevator movement loop
+        while (true)
         {
-            isMoving = true;
-            yield return null;
-        }
-        // Snap to the target point and stop
-        rb.MovePosition(target);
-        transform.position = target;
-        isMoving = false;
+            Vector2 target = worldTrackPoints[currentPointIndex];
+            moveTarget = target;
 
-        // Disable elevatorGroundDetector after moving
-        if (elevatorGroundDetector != null)
-            elevatorGroundDetector.SetActive(false);
+            if (elevatorGroundDetector != null)
+                elevatorGroundDetector.SetActive(true);
 
-        // Disable border colliders
-        foreach (var c in borderColliders)
-            if (c != null) c.enabled = false;
-
-        // Restore collisions for the activating player only
-        if (activatingPlayer != null)
-        {
-            activatingPlayer.transform.SetParent(null);
-            var playerColliders = activatingPlayer.GetComponents<BoxCollider2D>();
-            var allColliders = Object.FindObjectsByType<Collider2D>(FindObjectsSortMode.None);
-            foreach (var pc in playerColliders)
+            // Move towards the target point
+            while (Vector2.Distance(transform.position, target) > 0.05f)
             {
-                foreach (var col in allColliders)
-                {
-                    if (col.gameObject.layer == groundLayer || col.gameObject.layer == oneWayPlatformLayer)
-                    {
-                        Physics2D.IgnoreCollision(pc, col, false);
-                    }
-                }
+                isMoving = true;
+                yield return null;
             }
-            activatingPlayer = null; // Clear reference after move
+
+            rb.MovePosition(target);
+            transform.position = target;
+
+            // Check if this track point is a midpoint
+            Transform currentTrackTransform = trackPoints[currentPointIndex];
+            bool isMidpoint = currentTrackTransform != null && currentTrackTransform.CompareTag("Midpoint");
+
+            if (!isMidpoint)
+            {
+                // Stop at normal trackpoint
+                isMoving = false;
+                if (elevatorGroundDetector != null)
+                    elevatorGroundDetector.SetActive(false);
+
+                foreach (var c in borderColliders)
+                    if (c != null) c.enabled = false;
+
+                if (activatingPlayer != null)
+                {
+                    activatingPlayer.transform.SetParent(null);
+                    var playerColliders = activatingPlayer.GetComponents<BoxCollider2D>();
+                    var allColliders = Object.FindObjectsByType<Collider2D>(FindObjectsSortMode.None);
+                    foreach (var pc in playerColliders)
+                    {
+                        foreach (var col in allColliders)
+                        {
+                            if (col.gameObject.layer == groundLayer || col.gameObject.layer == oneWayPlatformLayer)
+                            {
+                                Physics2D.IgnoreCollision(pc, col, false);
+                            }
+                        }
+                    }
+                    activatingPlayer = null;
+                }
+                break;
+            }
+            else
+            {
+                // If midpoint, immediately go to next trackpoint
+                currentPointIndex = (currentPointIndex + 1) % worldTrackPoints.Count;
+            }
         }
     }
 
@@ -316,6 +328,13 @@ public class Elevator : MonoBehaviour, IActivatable
 
                 // Apply position, rotation, and object's scale
                 Gizmos.matrix = Matrix4x4.TRS(t.position, transform.rotation, transform.lossyScale);
+
+                // Set color based on tag
+                if (t.CompareTag("Midpoint"))
+                    Gizmos.color = new Color(1f, 0.5f, 0f, 1f); // orange
+                else
+                    Gizmos.color = Color.cyan;
+
                 Gizmos.DrawWireCube(offset, size);
 
                 // Restore the matrix
